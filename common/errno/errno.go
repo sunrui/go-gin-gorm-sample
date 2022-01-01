@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 )
 
-type IErrNo interface {
+type iErrNo interface {
 	WithId(id string) *ErrNo
 	WithData(data interface{}) *ErrNo
 }
