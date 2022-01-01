@@ -1,10 +1,25 @@
 package auth
 
 import (
-	"medium-server-go/common/gin"
+	"medium-server-go/common/starter"
 )
 
-func RegisterHandler(server *gin.Starter) {
-	server.RegisterHandler("POST", "/login/phone", LoginByPhone)
-	server.RegisterHandler("POST", "/login/wechat", LoginByWechat)
+func RegisterHandler(server *starter.Starter) {
+	var router starter.Router
+
+	router.GroupName = "/auth"
+	router.NeedAuth = true
+	router.RouterPaths = []starter.RouterPath{
+		{
+			HttpMethod:   "POST",
+			RelativePath: "/login/phone",
+			HandlerFunc:  LoginByPhone,
+		}, {
+			HttpMethod:   "POST",
+			RelativePath: "/login/wechat",
+			HandlerFunc:  LoginByWechat,
+		},
+	}
+
+	server.RegisterRouter(router)
 }

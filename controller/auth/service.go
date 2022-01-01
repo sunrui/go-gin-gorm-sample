@@ -3,25 +3,50 @@ package auth
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"medium-server-go/common/errno"
+	"github.com/go-playground/validator/v10"
 	"net/http"
 )
 
 func LoginByPhone(ctx *gin.Context) {
-	i := 3
-	j := 0
-	k := i / j
-	fmt.Println(k)
+	ctx.JSON(http.StatusOK, gin.H{
+		"msg": "login by phone",
+	})
 
-	ctx.JSON(http.StatusOK, errno.Forbidden)
-
-	//if req.Phone == "15068860507" {
-	//	return LoginRes{
-	//		UserId: "15068860507",
-	//	}
-	//}
+	return
+	//i := 3
+	//j := 0
+	//fmt.Println(i / j)
 	//
-	//return LoginRes{}
+	//return
+
+	var req LoginByPhoneReq
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		fmt.Println(err)
+	}
+
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	errs, ok := err.(validator.ValidationErrors)
+	if !ok {
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg": err.Error(),
+		})
+	}
+	// validator.ValidationErrors类型错误则进行翻译
+	ctx.JSON(http.StatusOK, gin.H{
+		"msg": errs.Error(),
+	})
+
+	fmt.Println(req)
+
+	ctx.JSON(http.StatusOK, LoginRes{
+		UserId: req.Phone,
+	})
 }
 
 func LoginByWechat(ctx *gin.Context) {
