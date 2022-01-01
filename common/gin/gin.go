@@ -1,4 +1,4 @@
-package starter
+package gin
 
 import (
 	"encoding/json"
@@ -61,6 +61,7 @@ func (starter *Starter) RegisterRouter(router Router) {
 			groupRouter.GET(routerPath.RelativePath, catchHandler(routerPath.HandlerFunc))
 		case "POST":
 			groupRouter.POST(routerPath.RelativePath, catchHandler(routerPath.HandlerFunc))
+			//groupRouter.POST(routerPath.RelativePath, routerPath.HandlerFunc)
 		case "PUT":
 			groupRouter.PUT(routerPath.RelativePath, catchHandler(routerPath.HandlerFunc))
 		case "DELETE":
@@ -83,6 +84,7 @@ func authMiddleware(ctx *gin.Context) {
 }
 
 func rateLimitMiddleware(fillInterval time.Duration, cap, quantum int64) gin.HandlerFunc {
+
 	bucket := ratelimit.NewBucketWithQuantum(fillInterval, cap, quantum)
 	return func(ctx *gin.Context) {
 		if bucket.TakeAvailable(1) < 1 {
@@ -94,34 +96,35 @@ func rateLimitMiddleware(fillInterval time.Duration, cap, quantum int64) gin.Han
 	}
 }
 
+func catch(ctx *gin.Context) {
+	if err := recover(); err != nil {
+		funcName, file, line, _ := runtime.Caller(3)
+		dataMap := make(map[string]interface{})
+		dataMap["reason"] = err
+
+		stack := make(map[string]string)
+		funcForPCName := runtime.FuncForPC(funcName).Name()
+		funcShortName := funcForPCName[strings.LastIndex(funcForPCName, "/")+1:]
+		stack["function"] = funcShortName
+		file += fmt.Sprintf(":%d", line)
+		stack["file"] = file
+
+		dataMap["stack"] = stack
+		errNo := errno.InternalError.WithData(dataMap)
+
+		marshal, _ := json.MarshalIndent(errNo, "", "    ")
+		fmt.Println(string(marshal))
+
+		file = file[strings.LastIndex(file, "/controller"):]
+		stack["file"] = file
+
+		ctx.JSON(http.StatusBadRequest, errNo)
+	}
+}
+
 func catchHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		defer func() {
-			if err := recover(); err != nil {
-				funcName, file, line, _ := runtime.Caller(3)
-				dataMap := make(map[string]interface{})
-				dataMap["reason"] = err
-
-				stack := make(map[string]string)
-				funcForPCName := runtime.FuncForPC(funcName).Name()
-				funcShortName := funcForPCName[strings.LastIndex(funcForPCName, "/")+1:]
-				stack["function"] = funcShortName
-				file += fmt.Sprintf(":%d", line)
-				stack["file"] = file
-
-				dataMap["stack"] = stack
-				errNo := errno.InternalError.WithData(dataMap)
-
-				marshal, _ := json.MarshalIndent(errNo, "", "    ")
-				fmt.Println(string(marshal))
-
-				file = file[strings.LastIndex(file, "/controller"):]
-				stack["file"] = file
-
-				ctx.JSON(http.StatusBadRequest, errNo)
-			}
-		}()
-
+		defer catch(ctx)
 		handlerFunc(ctx)
 	}
 }

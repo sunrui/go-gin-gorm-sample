@@ -8,16 +8,16 @@ import (
 )
 
 func LoginByPhone(ctx *gin.Context) {
+
+	i := 3
+	j := 0
+	fmt.Println(i / j)
+
 	ctx.JSON(http.StatusOK, gin.H{
 		"msg": "login by phone",
 	})
 
 	return
-	//i := 3
-	//j := 0
-	//fmt.Println(i / j)
-	//
-	//return
 
 	var req LoginByPhoneReq
 

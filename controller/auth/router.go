@@ -1,15 +1,15 @@
 package auth
 
 import (
-	"medium-server-go/common/starter"
+	"medium-server-go/common/gin"
 )
 
-func GetRouter() starter.Router {
-	var router starter.Router
+func GetRouter() gin.Router {
+	var router gin.Router
 
 	router.GroupName = "/auth"
 	router.NeedAuth = true
-	router.RouterPaths = []starter.RouterPath{
+	router.RouterPaths = []gin.RouterPath{
 		{
 			HttpMethod:   "POST",
 			RelativePath: "/login/phone",

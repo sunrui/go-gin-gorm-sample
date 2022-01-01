@@ -1,12 +1,12 @@
 package main
 
 import (
-	"medium-server-go/common/starter"
+	"medium-server-go/common/gin"
 	"medium-server-go/controller/auth"
 )
 
 func main() {
-	app := starter.New()
+	app := gin.New()
 
 	app.RegisterRouter(auth.GetRouter())
 
