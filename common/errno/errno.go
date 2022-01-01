@@ -28,11 +28,7 @@ func (code *ErrNo) WithData(data interface{}) *ErrNo {
 }
 
 func (code *ErrNo) String() string {
-	marshal, err := json.Marshal(code)
-	if err != nil {
-		return ""
-	}
-
+	marshal, _ := json.Marshal(code)
 	return string(marshal)
 }
 

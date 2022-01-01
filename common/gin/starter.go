@@ -1,11 +1,14 @@
 package gin
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"medium-server-go/common/errno"
 	"net/http"
+	"runtime"
 	"strconv"
+	"strings"
 )
 
 type Starter struct {
@@ -37,7 +40,27 @@ func cacheHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
-				context.JSON(http.StatusBadRequest, errno.InternalError.WithData(err))
+				funcName, file, line, _ := runtime.Caller(3)
+				dataMap := make(map[string]interface{})
+				dataMap["reason"] = err
+
+				stack := make(map[string]string)
+				funcForPCName := runtime.FuncForPC(funcName).Name()
+				funcShortName := funcForPCName[strings.LastIndex(funcForPCName, "/")+1:]
+				stack["function"] = funcShortName
+				file += fmt.Sprintf(":%d", line)
+				stack["file"] = file
+
+				dataMap["stack"] = stack
+				errNo := errno.InternalError.WithData(dataMap)
+
+				marshal, _ := json.MarshalIndent(errNo, "", "    ")
+				fmt.Println(string(marshal))
+
+				file = file[strings.LastIndex(file, "/controller"):]
+				stack["file"] = file
+
+				context.JSON(http.StatusBadRequest, errNo)
 			}
 		}()
 
