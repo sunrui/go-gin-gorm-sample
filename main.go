@@ -7,6 +7,8 @@ import (
 
 func main() {
 	app := starter.New()
-	auth.RegisterHandler(app)
+
+	app.RegisterRouter(auth.GetRouter())
+
 	app.Run(8080)
 }

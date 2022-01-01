@@ -4,7 +4,7 @@ import (
 	"medium-server-go/common/starter"
 )
 
-func RegisterHandler(server *starter.Starter) {
+func GetRouter() starter.Router {
 	var router starter.Router
 
 	router.GroupName = "/auth"
@@ -21,5 +21,5 @@ func RegisterHandler(server *starter.Starter) {
 		},
 	}
 
-	server.RegisterRouter(router)
+	return router
 }
