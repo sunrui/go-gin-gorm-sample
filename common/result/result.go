@@ -1,7 +1,8 @@
-// Copyright 2022 honeysense  All rights reserved.
-// Author: sunrui, smallrui@foxmail.com
-// Date: 2021.1.1 23:28
-//
+/*
+ * Copyright (c) 2022 honeysense All rights reserved.
+ * Author:sunrui
+ * Date:2022/01/01
+ */
 package result
 
 import "encoding/json"
