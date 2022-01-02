@@ -93,8 +93,8 @@ func ValidateParameter(ctx *gin.Context, req interface{}) *errno.ErrNo {
 
 haveError:
 	type ParamError struct {
-		Field string `json:"field"`
-		Tag   string `json:"tag"`
+		Field    string `json:"field"`
+		Validate string `json:"validate"`
 	}
 
 	errors := err.(validator.ValidationErrors)
@@ -102,18 +102,13 @@ haveError:
 
 	for _, e := range errors {
 		paramErrors = append(paramErrors, ParamError{
-			Field: strings.ToLower(e.Field()),
-			Tag:   e.Tag(),
+			Field:    strings.ToLower(e.Field()),
+			Validate: e.Tag() + "=" + e.Param(),
 		})
 	}
 
 	dataMap := make(map[string]interface{})
 	dataMap["errors"] = paramErrors
-
-	errNo := errno.ParameterError.WithData(dataMap)
-	marshal, _ := json.Marshal(errNo)
-	fmt.Println(marshal)
-	fmt.Println(errNo)
 
 	return errno.ParameterError.WithData(dataMap)
 }
