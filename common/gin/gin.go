@@ -79,11 +79,6 @@ func (app *App) Run(port int) {
 	}
 }
 
-type paramError struct {
-	field string
-	tag   string
-}
-
 func ValidateParameter(ctx *gin.Context, req interface{}) *errno.ErrNo {
 	var err error
 	if err = ctx.ShouldBind(&req); err != nil {
@@ -97,21 +92,28 @@ func ValidateParameter(ctx *gin.Context, req interface{}) *errno.ErrNo {
 	return nil
 
 haveError:
+	type ParamError struct {
+		Field string `json:"field"`
+		Tag   string `json:"tag"`
+	}
+
 	errors := err.(validator.ValidationErrors)
-	var paramErrors []paramError
+	var paramErrors []ParamError
 
 	for _, e := range errors {
-		paramErrors = append(paramErrors, paramError{
-			field: e.Field(),
-			tag:   e.Tag(),
+		paramErrors = append(paramErrors, ParamError{
+			Field: strings.ToLower(e.Field()),
+			Tag:   e.Tag(),
 		})
 	}
 
 	dataMap := make(map[string]interface{})
 	dataMap["errors"] = paramErrors
 
-	fmt.Println(dataMap)
-	fmt.Println(errno.ParameterError.WithData(dataMap))
+	errNo := errno.ParameterError.WithData(dataMap)
+	marshal, _ := json.Marshal(errNo)
+	fmt.Println(marshal)
+	fmt.Println(errNo)
 
 	return errno.ParameterError.WithData(dataMap)
 }
