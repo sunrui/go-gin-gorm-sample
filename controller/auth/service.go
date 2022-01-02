@@ -1,3 +1,7 @@
+// Copyright 2022 honeysense  All rights reserved.
+// Author: sunrui, smallrui@foxmail.com
+// Date: 2021.1.1 23:35
+//
 package auth
 
 import (
@@ -16,8 +20,16 @@ func LoginByPhone(ctx *gin.Context) {
 		return
 	}
 
+	if req.Phone != "15068860507" {
+		ctx.JSON(http.StatusOK,
+			result.Ok.WithData(LoginByPhoneRes{
+				PhoneNotExist: true,
+			}))
+		return
+	}
+
 	ctx.JSON(http.StatusOK,
-		result.Ok.WithData(LoginRes{
+		result.Ok.WithData(LoginByPhoneRes{
 			UserId: req.Phone,
 		}))
 }

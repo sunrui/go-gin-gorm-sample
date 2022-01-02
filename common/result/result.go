@@ -1,3 +1,7 @@
+// Copyright 2022 honeysense  All rights reserved.
+// Author: sunrui, smallrui@foxmail.com
+// Date: 2021.1.1 23:28
+//
 package result
 
 import "encoding/json"
@@ -44,8 +48,7 @@ var (
 	NotFound         = MakeResult("NotFound", "不存在")
 	Duplicate        = MakeResult("Duplicate", "已经存在")
 	RateLimit        = MakeResult("ExceedLimit", "超出限制")
-	IllegalData      = MakeResult("IllegalData", "数据不合法")
-	RepeatSubmit     = MakeResult("RepeatSubmit", "重复提交")
+	LogicError       = MakeResult("LogicError", "逻辑错误")
 	ParameterError   = MakeResult("ParameterError", "参数错误")
 	MethodNotAllowed = MakeResult("MethodNotAllowed", "请求方式不允许")
 	InternalError    = MakeResult("InternalError", "内部错误")
