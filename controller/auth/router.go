@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2022 honeysense All rights reserved.
- * Author:sunrui
- * Date:2022/01/02
+ * Author: sunrui
+ * Date: 2022/01/02
  */
 package auth
 
