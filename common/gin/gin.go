@@ -101,9 +101,14 @@ haveError:
 	var paramErrors []ParamError
 
 	for _, e := range errors {
+		validate := e.Tag()
+		if len(e.Param()) != 0 {
+			validate += "=" + e.Param()
+		}
+
 		paramErrors = append(paramErrors, ParamError{
 			Field:    strings.ToLower(e.Field()),
-			Validate: e.Tag() + "=" + e.Param(),
+			Validate: validate,
 		})
 	}
 
