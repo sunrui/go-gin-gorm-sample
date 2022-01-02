@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/juju/ratelimit"
-	"medium-server-go/common/errno"
+	"medium-server-go/common/result"
 	"net/http"
 	"runtime"
 	"strconv"
@@ -22,12 +22,12 @@ func New() *App {
 	engine := gin.Default()
 
 	engine.NoRoute(func(ctx *gin.Context) {
-		ctx.JSON(http.StatusBadRequest, errno.NotFound.WithKeyPair("uri", ctx.Request.URL.RequestURI()))
+		ctx.JSON(http.StatusBadRequest, result.NotFound.WithKeyPair("uri", ctx.Request.URL.RequestURI()))
 	})
 
 	engine.HandleMethodNotAllowed = true
 	engine.NoMethod(func(ctx *gin.Context) {
-		ctx.JSON(http.StatusBadRequest, errno.MethodNotAllowed.WithKeyPair("uri", ctx.Request.URL.RequestURI()))
+		ctx.JSON(http.StatusBadRequest, result.MethodNotAllowed.WithKeyPair("uri", ctx.Request.URL.RequestURI()))
 	})
 
 	engine.Use(rateLimitMiddleware(time.Second, 10000, 10000))
@@ -67,7 +67,7 @@ func (app *App) RegisterRouter(router Router) {
 		case "DELETE":
 			groupRouter.DELETE(routerPath.RelativePath, catchHandler(routerPath.HandlerFunc))
 		default:
-			panic(errno.InternalError.WithKeyPair("httpMethod", routerPath.HttpMethod))
+			panic(result.InternalError.WithKeyPair("httpMethod", routerPath.HttpMethod))
 		}
 	}
 }
@@ -75,11 +75,11 @@ func (app *App) RegisterRouter(router Router) {
 func (app *App) Run(port int) {
 	err := app.engine.Run(":" + strconv.Itoa(port))
 	if err != nil {
-		panic(errno.InternalError.WithData(err.Error()))
+		panic(result.InternalError.WithData(err.Error()))
 	}
 }
 
-func ValidateParameter(ctx *gin.Context, req interface{}) *errno.ErrNo {
+func ValidateParameter(ctx *gin.Context, req interface{}) *result.Result {
 	var err error
 	if err = ctx.ShouldBind(&req); err != nil {
 		goto haveError
@@ -115,7 +115,7 @@ haveError:
 	dataMap := make(map[string]interface{})
 	dataMap["errors"] = paramErrors
 
-	return errno.ParameterError.WithData(dataMap)
+	return result.ParameterError.WithData(dataMap)
 }
 
 func authMiddleware(ctx *gin.Context) {
@@ -127,7 +127,7 @@ func rateLimitMiddleware(fillInterval time.Duration, cap, quantum int64) gin.Han
 
 	return func(ctx *gin.Context) {
 		if bucket.TakeAvailable(1) < 1 {
-			ctx.JSON(http.StatusBadRequest, errno.RateLimit)
+			ctx.JSON(http.StatusBadRequest, result.RateLimit)
 			return
 		}
 
@@ -149,7 +149,7 @@ func catch(ctx *gin.Context) {
 		stack["file"] = file
 
 		dataMap["stack"] = stack
-		errNo := errno.InternalError.WithData(dataMap)
+		errNo := result.InternalError.WithData(dataMap)
 
 		marshal, _ := json.MarshalIndent(errNo, "", "    ")
 		fmt.Println(string(marshal))
