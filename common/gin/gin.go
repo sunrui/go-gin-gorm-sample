@@ -1,9 +1,10 @@
-package gin
+package app
 
 import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/juju/ratelimit"
 	"medium-server-go/common/errno"
 	"net/http"
@@ -13,11 +14,11 @@ import (
 	"time"
 )
 
-type Starter struct {
+type App struct {
 	engine *gin.Engine
 }
 
-func New() *Starter {
+func New() *App {
 	engine := gin.Default()
 
 	engine.NoRoute(func(ctx *gin.Context) {
@@ -31,7 +32,7 @@ func New() *Starter {
 
 	engine.Use(rateLimitMiddleware(time.Second, 10000, 10000))
 
-	return &Starter{
+	return &App{
 		engine: engine,
 	}
 }
@@ -48,8 +49,8 @@ type Router struct {
 	RouterPaths []RouterPath
 }
 
-func (starter *Starter) RegisterRouter(router Router) {
-	groupRouter := starter.engine.Group(router.GroupName)
+func (app *App) RegisterRouter(router Router) {
+	groupRouter := app.engine.Group(router.GroupName)
 
 	if router.NeedAuth {
 		groupRouter.Use(authMiddleware)
@@ -61,7 +62,6 @@ func (starter *Starter) RegisterRouter(router Router) {
 			groupRouter.GET(routerPath.RelativePath, catchHandler(routerPath.HandlerFunc))
 		case "POST":
 			groupRouter.POST(routerPath.RelativePath, catchHandler(routerPath.HandlerFunc))
-			//groupRouter.POST(routerPath.RelativePath, routerPath.HandlerFunc)
 		case "PUT":
 			groupRouter.PUT(routerPath.RelativePath, catchHandler(routerPath.HandlerFunc))
 		case "DELETE":
@@ -72,11 +72,48 @@ func (starter *Starter) RegisterRouter(router Router) {
 	}
 }
 
-func (starter *Starter) Run(port int) {
-	err := starter.engine.Run(":" + strconv.Itoa(port))
+func (app *App) Run(port int) {
+	err := app.engine.Run(":" + strconv.Itoa(port))
 	if err != nil {
 		panic(errno.InternalError.WithData(err.Error()))
 	}
+}
+
+type paramError struct {
+	field string
+	tag   string
+}
+
+func ValidateParameter(ctx *gin.Context, req interface{}) *errno.ErrNo {
+	var err error
+	if err = ctx.ShouldBind(&req); err != nil {
+		goto haveError
+	}
+
+	if err = validator.New().Struct(req); err != nil {
+		goto haveError
+	}
+
+	return nil
+
+haveError:
+	errors := err.(validator.ValidationErrors)
+	var paramErrors []paramError
+
+	for _, e := range errors {
+		paramErrors = append(paramErrors, paramError{
+			field: e.Field(),
+			tag:   e.Tag(),
+		})
+	}
+
+	dataMap := make(map[string]interface{})
+	dataMap["errors"] = paramErrors
+
+	fmt.Println(dataMap)
+	fmt.Println(errno.ParameterError.WithData(dataMap))
+
+	return errno.ParameterError.WithData(dataMap)
 }
 
 func authMiddleware(ctx *gin.Context) {
@@ -84,8 +121,8 @@ func authMiddleware(ctx *gin.Context) {
 }
 
 func rateLimitMiddleware(fillInterval time.Duration, cap, quantum int64) gin.HandlerFunc {
-
 	bucket := ratelimit.NewBucketWithQuantum(fillInterval, cap, quantum)
+
 	return func(ctx *gin.Context) {
 		if bucket.TakeAvailable(1) < 1 {
 			ctx.JSON(http.StatusBadRequest, errno.RateLimit)
@@ -100,7 +137,7 @@ func catch(ctx *gin.Context) {
 	if err := recover(); err != nil {
 		funcName, file, line, _ := runtime.Caller(3)
 		dataMap := make(map[string]interface{})
-		dataMap["reason"] = err
+		dataMap["error"] = err
 
 		stack := make(map[string]string)
 		funcForPCName := runtime.FuncForPC(funcName).Name()

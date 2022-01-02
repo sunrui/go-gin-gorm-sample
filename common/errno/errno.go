@@ -1,8 +1,6 @@
 package errno
 
-import (
-	"encoding/json"
-)
+import "encoding/json"
 
 type iErrNo interface {
 	WithId(id string) *ErrNo

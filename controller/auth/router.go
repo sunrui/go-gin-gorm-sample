@@ -4,12 +4,12 @@ import (
 	"medium-server-go/common/gin"
 )
 
-func GetRouter() gin.Router {
-	var router gin.Router
+func GetRouter() app.Router {
+	var router app.Router
 
 	router.GroupName = "/auth"
 	router.NeedAuth = true
-	router.RouterPaths = []gin.RouterPath{
+	router.RouterPaths = []app.RouterPath{
 		{
 			HttpMethod:   "POST",
 			RelativePath: "/login/phone",

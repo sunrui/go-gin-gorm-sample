@@ -6,9 +6,9 @@ import (
 )
 
 func main() {
-	app := gin.New()
+	inst := app.New()
 
-	app.RegisterRouter(auth.GetRouter())
+	inst.RegisterRouter(auth.GetRouter())
 
-	app.Run(8080)
+	inst.Run(8080)
 }
