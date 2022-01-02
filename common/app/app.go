@@ -124,7 +124,7 @@ haveError:
 }
 
 func authMiddleware(ctx *gin.Context) {
-	fmt.Println("authMiddleware = ")
+	ctx.Next()
 }
 
 func rateLimitMiddleware(fillInterval time.Duration, cap, quantum int64) gin.HandlerFunc {
@@ -154,15 +154,15 @@ func catch(ctx *gin.Context) {
 		stack["file"] = file
 
 		dataMap["stack"] = stack
-		errNo := result.InternalError.WithData(dataMap)
+		ret := result.InternalError.WithData(dataMap)
 
-		marshal, _ := json.MarshalIndent(errNo, "", "    ")
+		marshal, _ := json.MarshalIndent(ret, "", "    ")
 		fmt.Println(string(marshal))
 
 		file = file[strings.LastIndex(file, "/controller"):]
 		stack["file"] = file
 
-		ctx.JSON(http.StatusBadRequest, errNo)
+		ctx.JSON(http.StatusBadRequest, ret)
 	}
 }
 
@@ -170,5 +170,6 @@ func catchHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		defer catch(ctx)
 		handlerFunc(ctx)
+		ctx.Next()
 	}
 }
