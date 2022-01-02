@@ -6,7 +6,7 @@
 package auth
 
 import (
-	"medium-server-go/common/gin"
+	"medium-server-go/common/app"
 )
 
 func GetRouter() app.Router {

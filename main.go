@@ -6,7 +6,7 @@
 package main
 
 import (
-	"medium-server-go/common/gin"
+	"medium-server-go/common/app"
 	"medium-server-go/controller/auth"
 )
 

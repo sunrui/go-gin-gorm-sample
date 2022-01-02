@@ -7,7 +7,7 @@ package auth
 
 import (
 	"github.com/gin-gonic/gin"
-	starter "medium-server-go/common/gin"
+	"medium-server-go/common/app"
 	"medium-server-go/common/result"
 	"net/http"
 )
@@ -15,7 +15,7 @@ import (
 func LoginByPhone(ctx *gin.Context) {
 	var req LoginByPhoneReq
 
-	errNo := starter.ValidateParameter(ctx, &req)
+	errNo := app.ValidateParameter(ctx, &req)
 	if errNo != nil {
 		ctx.JSON(http.StatusBadRequest, errNo)
 		return
