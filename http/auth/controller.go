@@ -23,9 +23,7 @@ func PostLoginByPhone(ctx *gin.Context) {
 
 	if req.Phone != "15068860507" {
 		ctx.JSON(http.StatusOK,
-			result.Ok.WithData(LoginByPhoneRes{
-				PhoneNotExist: true,
-			}))
+			result.Ok.WithData(LoginByPhoneRes{}))
 		return
 	}
 

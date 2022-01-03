@@ -10,7 +10,8 @@ type LoginByPhoneReq struct {
 	SmsCode string `json:"smsCode" binding:"required" validate:"min=6,max=6"`
 }
 
+//PhoneNotExist bool   `json:"phoneNotExist"`
+
 type LoginByPhoneRes struct {
-	PhoneNotExist bool   `json:"phoneNotExist"`
-	UserId        string `json:"userId"`
+	UserId string `json:"userId"`
 }

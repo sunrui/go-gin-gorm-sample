@@ -24,12 +24,12 @@ func PostCode(ctx *gin.Context) {
 
 	if req.Phone != "15068860507" {
 		ctx.JSON(http.StatusOK,
-			result.Ok.WithData(PostCodeRes{}))
+			result.Ok)
 		return
 	}
 
 	ctx.JSON(http.StatusOK,
-		result.Ok.WithData(PostCodeRes{}))
+		result.Ok)
 }
 
 func PostVerify(ctx *gin.Context) {
@@ -43,10 +43,10 @@ func PostVerify(ctx *gin.Context) {
 
 	if req.Phone != "15068860507" {
 		ctx.JSON(http.StatusOK,
-			result.Ok.WithData(PostVerifyRes{}))
+			result.Ok)
 		return
 	}
 
 	ctx.JSON(http.StatusOK,
-		result.Ok.WithData(PostVerifyRes{}))
+		result.Ok)
 }

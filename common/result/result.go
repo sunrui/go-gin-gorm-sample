@@ -35,7 +35,7 @@ func (code *Result) String() string {
 	return string(marshal)
 }
 
-func makeResult(code string, message string) Result {
+func MakeResult(code string, message string) Result {
 	return Result{
 		Code:    code,
 		Message: message,

@@ -15,9 +15,9 @@ type PostCodeReq struct {
 	CodeType string `json:"codeType" binding:"required" validate:"oneof=LOGIN"`
 }
 
-type PostCodeRes struct {
-	SendLimit bool `json:"sendLimit"`
-}
+//var (
+//	SendLimit = result.MakeResult("SendLimit", "发送限制")
+//)
 
 type PostVerifyReq struct {
 	Phone    string `json:"phone" binding:"required" validate:"min=11,max=11"`
@@ -25,7 +25,8 @@ type PostVerifyReq struct {
 	Code     string `json:"code" binding:"required" validate:"min=11,max=11"`
 }
 
-type PostVerifyRes struct {
-	SendExpired bool `json:"sendExpired"`
-	NotMatch    bool `json:"notMatch"`
-}
+//
+//var (
+//	SendExpired = result.MakeResult("SendExpired", "发送已过期")
+//	NotMatch    = result.MakeResult("NotMatch", "验证码不匹配")
+//)
