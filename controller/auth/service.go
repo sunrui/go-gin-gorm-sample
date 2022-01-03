@@ -12,7 +12,7 @@ import (
 	"net/http"
 )
 
-func LoginByPhone(ctx *gin.Context) {
+func PostLoginByPhone(ctx *gin.Context) {
 	var req LoginByPhoneReq
 
 	errNo := app.ValidateParameter(ctx, &req)
@@ -35,6 +35,6 @@ func LoginByPhone(ctx *gin.Context) {
 		}))
 }
 
-func LoginByWechat(ctx *gin.Context) {
+func PostLoginByWechat(ctx *gin.Context) {
 
 }

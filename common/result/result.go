@@ -45,9 +45,10 @@ func MakeResult(code string, message string) Result {
 var (
 	Ok               = MakeResult("Ok", "成功")
 	NoAuth           = MakeResult("NoAuth", "没有登录")
+	Duplicate        = MakeResult("Duplicate", "已经存在")
 	Forbidden        = MakeResult("Forbidden", "没有权限")
 	NotFound         = MakeResult("NotFound", "不存在")
-	Duplicate        = MakeResult("Duplicate", "已经存在")
+	NotMatch         = MakeResult("NotMatch", "不匹配")
 	RateLimit        = MakeResult("ExceedLimit", "超出限制")
 	LogicError       = MakeResult("LogicError", "逻辑错误")
 	ParameterError   = MakeResult("ParameterError", "参数错误")
