@@ -35,7 +35,7 @@ func catch(ctx *gin.Context) {
 		marshal, _ := json.MarshalIndent(ret, "", "    ")
 		fmt.Println(string(marshal))
 
-		file = file[strings.LastIndex(file, "/controller"):]
+		file = file[strings.LastIndex(file, "/http"):]
 		stack["file"] = file
 
 		ctx.JSON(http.StatusBadRequest, ret)
