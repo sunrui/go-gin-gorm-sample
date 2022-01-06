@@ -7,7 +7,6 @@
 package sms
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"medium-server-go/common/app"
 	"medium-server-go/common/result"
@@ -23,12 +22,14 @@ func PostCode(ctx *gin.Context) {
 		return
 	}
 
-	i, j := 4, 0
-	k := i / j
-	fmt.Println(k)
+	code := FindByPhone(req.Phone)
+	if code == nil {
+		dataMap := make(map[string]string)
+		dataMap["phone"] = req.Phone
 
-	first := app.Db.First(&Code{}, "phone = ?", "15068860507")
-	fmt.Println(first)
+		ctx.JSON(http.StatusOK, result.NotFound.WithData(dataMap))
+		return
+	}
 
 	if req.Phone != "15068860507" {
 		ctx.JSON(http.StatusOK,
