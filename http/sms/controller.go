@@ -18,7 +18,16 @@ func PostCode(ctx *gin.Context) {
 
 	errNo := app.ValidateParameter(ctx, &req)
 	if errNo != nil {
-		ctx.JSON(http.StatusBadRequest, errNo)
+		app.Response(ctx, errNo)
+		return
+	}
+
+	count := CountByPhoneAndToday(req.Phone)
+	if count > 5 {
+		dataMap := make(map[string]int)
+		dataMap["count"] = count
+
+		app.Response(ctx, result.RateLimit.WithData(dataMap))
 		return
 	}
 
@@ -27,13 +36,12 @@ func PostCode(ctx *gin.Context) {
 		dataMap := make(map[string]string)
 		dataMap["phone"] = req.Phone
 
-		ctx.JSON(http.StatusOK, result.NotFound.WithData(dataMap))
+		app.Response(ctx, result.NotFound.WithData(dataMap))
 		return
 	}
 
 	if req.Phone != "15068860507" {
-		ctx.JSON(http.StatusOK,
-			result.Ok)
+		app.Response(ctx, &result.NotFound)
 		return
 	}
 

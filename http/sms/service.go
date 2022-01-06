@@ -17,3 +17,11 @@ func FindByPhone(phone string) *Code {
 
 	return nil
 }
+
+func CountByPhoneAndDay(phone string, day string) int {
+	return 0
+}
+
+func CountByPhoneAndToday(phone string) int {
+	return 6
+}
