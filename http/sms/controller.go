@@ -22,7 +22,7 @@ func PostCode(ctx *gin.Context) {
 		return
 	}
 
-	count := CountByPhoneAndToday(req.Phone)
+	count := countByPhoneAndDay(req.Phone, makeToday())
 	if count > 5 {
 		dataMap := make(map[string]int)
 		dataMap["count"] = count
@@ -31,19 +31,13 @@ func PostCode(ctx *gin.Context) {
 		return
 	}
 
-	code := FindByPhone(req.Phone)
-	if code == nil {
-		dataMap := make(map[string]string)
-		dataMap["phone"] = req.Phone
-
-		app.Response(ctx, result.NotFound.WithData(dataMap))
-		return
-	}
-
-	if req.Phone != "15068860507" {
-		app.Response(ctx, &result.NotFound)
-		return
-	}
+	createCode(&Code{
+		Phone:    req.Phone,
+		CodeType: req.CodeType,
+		Code:     "123456",
+		Day:      makeToday(),
+		Ip:       ctx.ClientIP(),
+	})
 
 	ctx.JSON(http.StatusOK,
 		result.Ok)

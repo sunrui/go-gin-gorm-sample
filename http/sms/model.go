@@ -6,9 +6,7 @@
 
 package sms
 
-import (
-	"gorm.io/gorm"
-)
+import "medium-server-go/common/db"
 
 type CodeType string
 
@@ -17,7 +15,7 @@ const (
 )
 
 type Code struct {
-	gorm.Model
+	db.Model
 	Phone    string   `json:"phone" gorm:"column:phone"`
 	CodeType CodeType `json:"codeType"`
 	Code     string   `json:"code"`
