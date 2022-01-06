@@ -7,20 +7,15 @@ package main
 
 import (
 	"medium-server-go/common/app"
-	"medium-server-go/common/db"
 	"medium-server-go/http/auth"
 	"medium-server-go/http/sms"
 )
 
 func main() {
-	db.Test()
+	server := app.New()
 
-	return
+	server.RegisterRouter(sms.GetRouter())
+	server.RegisterRouter(auth.GetRouter())
 
-	inst := app.New()
-
-	inst.RegisterRouter(sms.GetRouter())
-	inst.RegisterRouter(auth.GetRouter())
-
-	inst.Run(8080)
+	server.Run(8080)
 }

@@ -44,8 +44,19 @@ func catch(ctx *gin.Context) {
 
 func catchHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		//defer func() {
+		//	if err := recover(); err != nil {
+		//		dataMap := make(map[string]string)
+		//		dataMap["error"] = fmt.Sprintf("%s", err)
+		//		dataMap["stack"] = fmt.Sprintf("%s", debug.Stack())
+		//
+		//		ctx.JSON(http.StatusBadRequest, result.InternalError.WithData(dataMap))
+		//	}
+		//}()
+
 		defer catch(ctx)
-		handlerFunc(ctx)
+
 		ctx.Next()
+		handlerFunc(ctx)
 	}
 }

@@ -5,7 +5,9 @@
  */
 package result
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type IResult interface {
 	WithId(id string) *Result

@@ -6,13 +6,11 @@
 
 package sms
 
-const (
-	LOGIN = iota
-)
-
 type PostCodeReq struct {
-	Phone    string `json:"phone" binding:"required" validate:"min=11,max=11"`
-	CodeType string `json:"codeType" binding:"required" validate:"oneof=LOGIN"`
+	Phone string `from:"phone" binding:"required" validate:"min=11,max=11"`
+	//Phone    string   `json:"phone" binding:"required" validate:"min=11,max=11"`
+	//CodeType CodeType `json:"codeType" binding:"required" validate:"oneof=LOGIN"`
+	CodeType CodeType `from:"codeType" binding:"required" validate:"oneof=LOGIN"`
 }
 
 //var (
@@ -20,9 +18,9 @@ type PostCodeReq struct {
 //)
 
 type PostVerifyReq struct {
-	Phone    string `json:"phone" binding:"required" validate:"min=11,max=11"`
-	CodeType string `json:"codeType" binding:"required" validate:"oneof=LOGIN"`
-	Code     string `json:"code" binding:"required" validate:"min=11,max=11"`
+	Phone    string   `json:"phone" binding:"required" validate:"min=11,max=11"`
+	CodeType CodeType `json:"codeType" binding:"required" validate:"oneof=LOGIN"`
+	Code     string   `json:"code" binding:"required" validate:"min=11,max=11"`
 }
 
 //

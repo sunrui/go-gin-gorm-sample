@@ -7,6 +7,7 @@
 package sms
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"medium-server-go/common/app"
 	"medium-server-go/common/result"
@@ -21,6 +22,9 @@ func PostCode(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, errNo)
 		return
 	}
+
+	first := app.Db.First(&Code{}, "phone = ?", "15068860507")
+	fmt.Println(first)
 
 	if req.Phone != "15068860507" {
 		ctx.JSON(http.StatusOK,

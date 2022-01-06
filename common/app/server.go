@@ -13,11 +13,11 @@ import (
 	"time"
 )
 
-type App struct {
+type Server struct {
 	engine *gin.Engine
 }
 
-func New() *App {
+func New() *Server {
 	engine := gin.Default()
 
 	engine.NoRoute(func(ctx *gin.Context) {
@@ -31,12 +31,12 @@ func New() *App {
 
 	engine.Use(rateLimitMiddleware(time.Second, 10000, 10000))
 
-	return &App{
+	return &Server{
 		engine: engine,
 	}
 }
 
-func (app *App) Run(port int) {
+func (app *Server) Run(port int) {
 	err := app.engine.Run(":" + strconv.Itoa(port))
 	if err != nil {
 		panic(result.InternalError.WithData(err.Error()))

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2022 honeysense All rights reserved.
  * Author: sunrui
- * Date: 2022/01/03 23:29:03
+ * Date: 2022/01/04 21:46:04
  */
 
 package db
 
 import (
-	"fmt"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"medium-server-go/common/result"
@@ -37,27 +36,34 @@ func DB() *gorm.DB {
 }
 
 func Test() {
-	type User struct {
-		Id   string
-		Name string
-		age  int
+	type Product struct {
+		gorm.Model
+		Code  string `gorm:"column:code"`
+		Price uint
 	}
 
-	var users = []User{{
-		Name: "jinzhu1",
-		age:  1,
-	}, {
-		Name: "jinzhu2",
-		age:  2,
-	}, {
-		Name: "jinzhu3",
-		age:  3,
-	}}
-
-	DB().Create(&users)
-
-	for _, user := range users {
-		fmt.Println(user.Id)
+	db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
 	}
 
+	// Migrate the schema
+	err = db.AutoMigrate(&Product{})
+	if err != nil {
+		return
+	}
+
+	// 创建
+	db.Create(&Product{Code: "L1212", Price: 1000})
+
+	// 读取
+	var product Product
+	db.First(&product, 1)                   // 查询id为1的product
+	db.First(&product, "code = ?", "L1212") // 查询code为l1212的product
+
+	// 更新 - 更新product的price为2000
+	db.Model(&product).Update("Price", 2000)
+
+	// 删除 - 删除product
+	//db.Delete(&product)
 }

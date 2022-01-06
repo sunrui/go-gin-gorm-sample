@@ -23,7 +23,7 @@ type Router struct {
 	RouterPaths []RouterPath
 }
 
-func (app *App) RegisterRouter(router Router) {
+func (app *Server) RegisterRouter(router Router) {
 	groupRouter := app.engine.Group(router.GroupName)
 
 	if router.NeedAuth {
