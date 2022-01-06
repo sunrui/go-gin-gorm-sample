@@ -23,6 +23,10 @@ func PostCode(ctx *gin.Context) {
 		return
 	}
 
+	i, j := 4, 0
+	k := i / j
+	fmt.Println(k)
+
 	first := app.Db.First(&Code{}, "phone = ?", "15068860507")
 	fmt.Println(first)
 

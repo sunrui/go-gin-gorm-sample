@@ -22,21 +22,21 @@ func catch(ctx *gin.Context) {
 		dataMap := make(map[string]interface{})
 		dataMap["error"] = err
 
-		stack := make(map[string]string)
+		debug := make(map[string]string)
+
 		funcForPCName := runtime.FuncForPC(funcName).Name()
 		funcShortName := funcForPCName[strings.LastIndex(funcForPCName, "/")+1:]
-		stack["function"] = funcShortName
-		file += fmt.Sprintf(":%d", line)
-		stack["file"] = file
+		debug["function"] = funcShortName
 
-		dataMap["stack"] = stack
+		file = file[strings.LastIndex(file, "/http"):]
+		file += fmt.Sprintf(":%d", line)
+		debug["file"] = file
+
+		dataMap["debug"] = debug
 		ret := result.InternalError.WithData(dataMap)
 
 		marshal, _ := json.MarshalIndent(ret, "", "    ")
 		fmt.Println(string(marshal))
-
-		file = file[strings.LastIndex(file, "/http"):]
-		stack["file"] = file
 
 		ctx.JSON(http.StatusBadRequest, ret)
 	}
@@ -44,16 +44,6 @@ func catch(ctx *gin.Context) {
 
 func catchHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		//defer func() {
-		//	if err := recover(); err != nil {
-		//		dataMap := make(map[string]string)
-		//		dataMap["error"] = fmt.Sprintf("%s", err)
-		//		dataMap["stack"] = fmt.Sprintf("%s", debug.Stack())
-		//
-		//		ctx.JSON(http.StatusBadRequest, result.InternalError.WithData(dataMap))
-		//	}
-		//}()
-
 		defer catch(ctx)
 
 		ctx.Next()

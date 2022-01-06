@@ -10,10 +10,10 @@ import (
 	"gorm.io/gorm"
 )
 
-type CodeType int
+type CodeType string
 
 const (
-	LOGIN = iota
+	LOGIN = "LOGIN"
 )
 
 type Code struct {

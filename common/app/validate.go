@@ -7,6 +7,8 @@
 package app
 
 import (
+	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"medium-server-go/common/result"
@@ -26,15 +28,22 @@ func ValidateParameter(ctx *gin.Context, req interface{}) *result.Result {
 	return nil
 
 haveError:
+	var validationErrors validator.ValidationErrors
+
+	if !errors.As(err, &validationErrors) {
+		dataMap := make(map[string]interface{})
+		dataMap["error"] = fmt.Sprintf("%s", err)
+		return result.ParameterError.WithData(dataMap)
+	}
+
 	type ParamError struct {
 		Field    string `json:"field"`
 		Validate string `json:"validate"`
 	}
 
-	errors := err.(validator.ValidationErrors)
 	var paramErrors []ParamError
 
-	for _, e := range errors {
+	for _, e := range validationErrors {
 		validate := e.Tag()
 		if len(e.Param()) != 0 {
 			validate += "=" + e.Param()
