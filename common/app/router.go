@@ -8,7 +8,6 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-	"medium-server-go/common/result"
 )
 
 type RouterPath struct {
@@ -41,7 +40,7 @@ func (app *Server) RegisterRouter(router Router) {
 		case "DELETE":
 			groupRouter.DELETE(routerPath.RelativePath, catchHandler(routerPath.HandlerFunc))
 		default:
-			panic(result.InternalError.WithKeyPair("httpMethod", routerPath.HttpMethod))
+			panic("http method not supported")
 		}
 	}
 }

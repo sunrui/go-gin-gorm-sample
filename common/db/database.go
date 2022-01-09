@@ -11,7 +11,6 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"medium-server-go/common/config"
-	"medium-server-go/common/result"
 	"strings"
 	"time"
 )
@@ -24,7 +23,7 @@ func init() {
 	var err error
 	Default, err = gorm.Open(sqlite.Open(mysql.Database), &gorm.Config{})
 	if err != nil {
-		panic(result.InternalError.WithData(err.Error()))
+		panic(err.Error())
 	}
 }
 
@@ -48,3 +47,10 @@ func (base *Model) BeforeCreate(tx *gorm.DB) (err error) {
 
 	return nil
 }
+
+//
+//func (base *Model) BeforeUpdate(tx *gorm.DB) (err error) {
+//	base.UpdatedAt = time.Now()
+//
+//	return nil
+//}

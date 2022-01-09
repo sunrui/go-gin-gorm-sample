@@ -24,7 +24,7 @@ func PostCode(ctx *gin.Context) {
 
 	count := countByPhoneAndDay(req.Phone, makeToday())
 	if count > 5 {
-		dataMap := make(map[string]int)
+		dataMap := make(map[string]int64)
 		dataMap["count"] = count
 
 		app.Response(ctx, result.RateLimit.WithData(dataMap))

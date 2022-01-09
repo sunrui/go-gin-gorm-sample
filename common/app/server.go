@@ -46,6 +46,6 @@ func New() *Server {
 func (app *Server) Run(port int) {
 	err := app.engine.Run(":" + strconv.Itoa(port))
 	if err != nil {
-		panic(result.InternalError.WithData(err.Error()))
+		panic(err.Error())
 	}
 }

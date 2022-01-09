@@ -9,14 +9,13 @@ package sms
 import (
 	"fmt"
 	"medium-server-go/common/db"
-	"medium-server-go/common/result"
 	"time"
 )
 
 func init() {
 	err := db.Default.AutoMigrate(&Code{})
 	if err != nil {
-		panic(result.InternalError.WithData(err.Error()))
+		panic(err.Error())
 	}
 }
 
@@ -37,17 +36,14 @@ func findByPhone(phone string) *Code {
 	return nil
 }
 
-func countByPhoneAndDay(phone string, day string) int {
-	var code []Code
-	query := db.Default.Where("phone = ? AND day = ?", phone, day).Find(&code)
+func countByPhoneAndDay(phone string, day string) int64 {
+	var count int64
+	query := db.Default.Where("phone = ? AND day = ?", phone, day).Find(&Code{}).Count(&count)
 	if query.Error != nil {
-		panic(result.InternalError.WithData(query.Error.Error()))
+		panic(query.Error.Error())
 	}
 
-	fmt.Println(code)
+	//db.Default.Raw(fmt.Sprintf("SELECT count(*) FROM code WHERE date(created_at) = %"))
 
-	panic(result.InternalError.WithData(code))
-	//panic(code)
-
-	return 0
+	return count
 }
