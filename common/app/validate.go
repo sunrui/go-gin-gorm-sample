@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	"medium-server-go/common/result"
 	"strings"
@@ -17,7 +18,7 @@ import (
 
 func ValidateParameter(ctx *gin.Context, req interface{}) *result.Result {
 	var err error
-	if err = ctx.ShouldBind(&req); err != nil {
+	if err = ctx.MustBindWith(&req, binding.JSON); err != nil {
 		goto haveError
 	}
 
