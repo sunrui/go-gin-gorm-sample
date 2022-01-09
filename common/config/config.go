@@ -18,16 +18,6 @@ type Mysql struct {
 	Password string
 }
 
-func createMysql(host string, port int, database string, user string, password string) Mysql {
-	return Mysql{
-		Host:     host,
-		Port:     port,
-		Database: database,
-		User:     user,
-		Password: password,
-	}
-}
-
 type Config struct {
 	Mysql Mysql
 }
@@ -39,13 +29,33 @@ func createConfig(mysql Mysql) Config {
 }
 
 var (
-	Debug = createConfig(
-		createMysql("Host", 3316, "medium.db", "User", "Password"),
+	debug = createConfig(
+		Mysql{
+			Host:     "host",
+			Port:     3316,
+			Database: "medium.db",
+			User:     "user",
+			Password: "password",
+		},
 	)
-	Release = createConfig(
-		createMysql("Host", 3316, "medium.db", "User", "Password"),
+	release = createConfig(
+		Mysql{
+			Host:     "host",
+			Port:     3316,
+			Database: "medium.db",
+			User:     "user",
+			Password: "password",
+		},
 	)
 )
+
+func Get() Config {
+	if IsDebugMode() {
+		return debug
+	} else {
+		return release
+	}
+}
 
 func IsDebugMode() bool {
 	return os.Getenv("release") == ""

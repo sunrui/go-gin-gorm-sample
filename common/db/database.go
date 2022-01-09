@@ -19,13 +19,7 @@ import (
 var Default *gorm.DB
 
 func init() {
-	var mysql config.Mysql
-
-	if config.IsDebugMode() {
-		mysql = config.Debug.Mysql
-	} else {
-		mysql = config.Release.Mysql
-	}
+	mysql := config.Get().Mysql
 
 	var err error
 	Default, err = gorm.Open(sqlite.Open(mysql.Database), &gorm.Config{})
