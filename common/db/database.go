@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"medium-server-go/common/config"
 	"medium-server-go/common/result"
 	"strings"
 	"time"
@@ -18,8 +19,16 @@ import (
 var Default *gorm.DB
 
 func init() {
+	var mysql config.Mysql
+
+	if config.IsDebugMode() {
+		mysql = config.Debug.Mysql
+	} else {
+		mysql = config.Release.Mysql
+	}
+
 	var err error
-	Default, err = gorm.Open(sqlite.Open("medium.db"), &gorm.Config{})
+	Default, err = gorm.Open(sqlite.Open(mysql.Database), &gorm.Config{})
 	if err != nil {
 		panic(result.InternalError.WithData(err.Error()))
 	}

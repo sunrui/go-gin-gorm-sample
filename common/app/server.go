@@ -7,6 +7,7 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
+	"medium-server-go/common/config"
 	"medium-server-go/common/result"
 	"net/http"
 	"strconv"
@@ -15,6 +16,12 @@ import (
 
 type Server struct {
 	engine *gin.Engine
+}
+
+func init() {
+	if !config.IsDebugMode() {
+		gin.SetMode(gin.ReleaseMode)
+	}
 }
 
 func New() *Server {

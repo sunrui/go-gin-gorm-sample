@@ -16,7 +16,7 @@ const (
 
 type Code struct {
 	db.Model
-	Phone    string   `json:"phone" gorm:"column:phone"`
+	Phone    string   `json:"phone"`
 	CodeType CodeType `json:"codeType"`
 	Code     string   `json:"code"`
 	Day      string   `json:"day"`
