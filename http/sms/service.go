@@ -38,8 +38,16 @@ func findByPhone(phone string) *Code {
 }
 
 func countByPhoneAndDay(phone string, day string) int {
-	db.Default.Where("phone = ? AND day = ?", phone, day).Find(&Code{})
+	var code []Code
+	query := db.Default.Where("phone = ? AND day = ?", phone, day).Find(&code)
+	if query.Error != nil {
+		panic(result.InternalError.WithData(query.Error.Error()))
+	}
 
-	db.Default.Find(&Code{})
+	fmt.Println(code)
+
+	panic(result.InternalError.WithData(code))
+	//panic(code)
+
 	return 0
 }

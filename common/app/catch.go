@@ -20,7 +20,13 @@ func catch(ctx *gin.Context) {
 	if err := recover(); err != nil {
 		funcName, file, line, _ := runtime.Caller(3)
 		dataMap := make(map[string]interface{})
-		dataMap["error"] = err
+
+		res, ok := err.(*result.Result)
+		if ok {
+			dataMap["error"] = res.Data
+		} else {
+			dataMap["error"] = err
+		}
 
 		debug := make(map[string]string)
 
