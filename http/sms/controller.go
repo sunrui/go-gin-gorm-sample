@@ -7,11 +7,9 @@
 package sms
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"medium-server-go/common/app"
 	"medium-server-go/common/result"
-	"time"
 )
 
 const codeLimitPerDate = 5
@@ -25,19 +23,18 @@ func postCode(ctx *gin.Context) {
 		return
 	}
 
-	now := time.Now()
-	date := fmt.Sprintf("%4d-%02d-%02d", now.Year(), now.Month(), now.Day())
-
-	count := countByPhoneAndDate(req.Phone, date)
+	count := countByPhoneAndDate(req.Phone, getNowDate())
 	if count >= codeLimitPerDate {
 		app.Response(ctx, &result.RateLimit)
 		return
 	}
 
+	sixNumber := createSixNumber()
+
 	createCode(&Code{
 		Phone:    req.Phone,
 		CodeType: req.CodeType,
-		Code:     "123456",
+		Code:     sixNumber,
 		Ip:       ctx.ClientIP(),
 	})
 

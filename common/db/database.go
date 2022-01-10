@@ -54,23 +54,14 @@ func MakeId() string {
 }
 
 type Model struct {
-	Id        string    `sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
-	CreatedAt time.Time `json:"created_at" gorm:"autoUpdateTime:milli"`
-	UpdatedAt time.Time `json:"updated_at" gorm:"autoCreateTime"`
-	//CreatedAt time.Time  `json:"created_at"`
-	//UpdatedAt time.Time  `json:"updated_at"`
+	Id        string     `sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
+	CreatedAt time.Time  `json:"created_at" gorm:"autoCreateTime:milli"`
+	UpdatedAt time.Time  `json:"updated_at" gorm:"autoUpdateTime:milli"`
 	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
 }
 
-func (base *Model) BeforeCreate(tx *gorm.DB) (err error) {
+func (base *Model) BeforeCreate(*gorm.DB) (err error) {
 	base.Id = MakeId()
 
 	return nil
 }
-
-//
-//func (base *Model) BeforeUpdate(tx *gorm.DB) (err error) {
-//	base.UpdatedAt = time.Now()
-//
-//	return nil
-//}

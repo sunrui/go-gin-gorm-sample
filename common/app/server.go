@@ -31,10 +31,12 @@ func New() *Server {
 		ctx.JSON(http.StatusBadRequest, result.NotFound.WithKeyPair("uri", ctx.Request.URL.RequestURI()))
 	})
 
-	engine.HandleMethodNotAllowed = true
-	engine.NoMethod(func(ctx *gin.Context) {
-		ctx.JSON(http.StatusBadRequest, result.MethodNotAllowed.WithKeyPair("uri", ctx.Request.URL.RequestURI()))
-	})
+	{
+		engine.HandleMethodNotAllowed = true
+		engine.NoMethod(func(ctx *gin.Context) {
+			ctx.JSON(http.StatusBadRequest, result.MethodNotAllowed.WithKeyPair("uri", ctx.Request.URL.RequestURI()))
+		})
+	}
 
 	engine.Use(jsonResponseMiddleware)
 	engine.Use(rateLimitMiddleware(time.Second, 10000, 10000))

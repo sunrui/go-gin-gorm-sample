@@ -7,12 +7,12 @@
 package sms
 
 type postCodeReq struct {
-	Phone    string   `json:"phone" binding:"required" validate:"min=11,max=11"`
+	Phone    string   `json:"phone" binding:"required" validate:"len=11,numeric"`
 	CodeType CodeType `json:"codeType" binding:"required" validate:"oneof=LOGIN"`
 }
 
 type postVerifyReq struct {
-	Phone    string   `json:"phone" binding:"required" validate:"min=11,max=11"`
+	Phone    string   `json:"phone" binding:"required" validate:"len=11,numeric"`
 	CodeType CodeType `json:"codeType" binding:"required" validate:"oneof=LOGIN"`
-	Code     string   `json:"code" binding:"required" validate:"min=11,max=11"`
+	Code     string   `json:"code" binding:"required" validate:"len=6,numeric"`
 }

@@ -7,7 +7,11 @@
 package sms
 
 import (
+	"fmt"
+	"gorm.io/gorm"
+	"math/rand"
 	"medium-server-go/common/db"
+	"time"
 )
 
 func init() {
@@ -17,24 +21,39 @@ func init() {
 	}
 }
 
+func getNowDate() string {
+	now := time.Now()
+	date := fmt.Sprintf("%4d-%02d-%02d", now.Year(), now.Month(), now.Day())
+
+	return date
+}
+
+func createSixNumber() string {
+	return fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(1000000))
+}
+
 func createCode(code *Code) {
 	db.Default.Save(code)
 }
 
 func findByPhoneAndCodeType(phone string, codeType string) *Code {
-	var code *Code
-	query := db.Default.First(code, "phone = ? AND codeType = ?", phone, codeType)
+	var code Code
+	query := db.Default.Where("phone = ? AND code_type = ? AND date(created_at) = ?", phone, codeType, getNowDate()).Last(&code)
+	if query.Error == gorm.ErrRecordNotFound {
+		return nil
+	}
+
 	if query.Error != nil {
 		panic(query.Error.Error())
 	}
 
-	return code
+	return &code
 }
 
 func countByPhoneAndDate(phone string, date string) int64 {
 	var count int64
 
-	query := db.Default.Where("phone = ? AND DATE(created_at) = ?", phone, date).Find(&Code{}).Count(&count)
+	query := db.Default.Model(&Code{}).Where("phone = ? AND DATE(created_at) = ?", phone, date).Count(&count)
 	if query.Error != nil {
 		panic(query.Error.Error())
 	}
