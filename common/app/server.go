@@ -36,6 +36,7 @@ func New() *Server {
 		ctx.JSON(http.StatusBadRequest, result.MethodNotAllowed.WithKeyPair("uri", ctx.Request.URL.RequestURI()))
 	})
 
+	engine.Use(jsonResponseMiddleware)
 	engine.Use(rateLimitMiddleware(time.Second, 10000, 10000))
 
 	return &Server{
