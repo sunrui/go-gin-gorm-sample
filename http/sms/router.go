@@ -17,11 +17,11 @@ func GetRouter() app.Router {
 		{
 			HttpMethod:   "POST",
 			RelativePath: "/code",
-			HandlerFunc:  PostCode,
+			HandlerFunc:  postCode,
 		}, {
 			HttpMethod:   "POST",
 			RelativePath: "/verify",
-			HandlerFunc:  PostVerify,
+			HandlerFunc:  postVerify,
 		},
 	}
 

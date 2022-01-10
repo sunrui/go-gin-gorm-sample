@@ -18,11 +18,11 @@ func GetRouter() app.Router {
 		{
 			HttpMethod:   "POST",
 			RelativePath: "/login/phone",
-			HandlerFunc:  PostLoginByPhone,
+			HandlerFunc:  postLoginByPhone,
 		}, {
 			HttpMethod:   "POST",
 			RelativePath: "/login/wechat",
-			HandlerFunc:  PostLoginByWechat,
+			HandlerFunc:  postLoginByWechat,
 		},
 	}
 

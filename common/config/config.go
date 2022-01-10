@@ -10,7 +10,11 @@ import (
 	"os"
 )
 
-type Mysql struct {
+type SqliteConfig struct {
+	Database string
+}
+
+type MysqlConfig struct {
 	Host     string
 	Port     int
 	Database string
@@ -19,33 +23,33 @@ type Mysql struct {
 }
 
 type Config struct {
-	Mysql Mysql
+	MysqlConfig  *MysqlConfig
+	SqliteConfig *SqliteConfig
 }
 
-func createConfig(mysql Mysql) Config {
+func createConfig(mysqlConfig *MysqlConfig, sqliteConfig *SqliteConfig) Config {
 	return Config{
-		Mysql: mysql,
+		MysqlConfig:  mysqlConfig,
+		SqliteConfig: sqliteConfig,
 	}
 }
 
 var (
 	debug = createConfig(
-		Mysql{
-			Host:     "host",
-			Port:     3316,
+		nil,
+		&SqliteConfig{
 			Database: "medium.db",
-			User:     "user",
-			Password: "password",
 		},
 	)
 	release = createConfig(
-		Mysql{
+		&MysqlConfig{
 			Host:     "host",
 			Port:     3316,
 			Database: "medium.db",
 			User:     "user",
 			Password: "password",
 		},
+		nil,
 	)
 )
 

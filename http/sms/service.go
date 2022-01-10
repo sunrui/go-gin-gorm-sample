@@ -7,9 +7,7 @@
 package sms
 
 import (
-	"fmt"
 	"medium-server-go/common/db"
-	"time"
 )
 
 func init() {
@@ -23,27 +21,23 @@ func createCode(code *Code) {
 	db.Default.Save(code)
 }
 
-func makeToday() string {
-	now := time.Now()
-	today := fmt.Sprintf("%4d%02d%02d", now.Year(), now.Month(), now.Day())
-	return today
-}
-
-func findByPhone(phone string) *Code {
-	first := db.Default.First(&Code{}, "phone = ?", phone)
-	fmt.Println(first)
-
-	return nil
-}
-
-func countByPhoneAndDay(phone string, day string) int64 {
-	var count int64
-	query := db.Default.Where("phone = ? AND day = ?", phone, day).Find(&Code{}).Count(&count)
+func findByPhoneAndCodeType(phone string, codeType string) *Code {
+	var code *Code
+	query := db.Default.First(code, "phone = ? AND codeType = ?", phone, codeType)
 	if query.Error != nil {
 		panic(query.Error.Error())
 	}
 
-	//db.Default.Raw(fmt.Sprintf("SELECT count(*) FROM code WHERE date(created_at) = %"))
+	return code
+}
+
+func countByPhoneAndDate(phone string, date string) int64 {
+	var count int64
+
+	query := db.Default.Where("phone = ? AND DATE(created_at) = ?", phone, date).Find(&Code{}).Count(&count)
+	if query.Error != nil {
+		panic(query.Error.Error())
+	}
 
 	return count
 }

@@ -12,8 +12,8 @@ import (
 	"net/http"
 )
 
-func PostLoginByPhone(ctx *gin.Context) {
-	var req LoginByPhoneReq
+func postLoginByPhone(ctx *gin.Context) {
+	var req loginByPhoneReq
 
 	errNo := app.ValidateParameter(ctx, &req)
 	if errNo != nil {
@@ -23,16 +23,16 @@ func PostLoginByPhone(ctx *gin.Context) {
 
 	if req.Phone != "15068860507" {
 		ctx.JSON(http.StatusOK,
-			result.Ok.WithData(LoginByPhoneRes{}))
+			result.Ok.WithData(loginByPhoneRes{}))
 		return
 	}
 
 	ctx.JSON(http.StatusOK,
-		result.Ok.WithData(LoginByPhoneRes{
+		result.Ok.WithData(loginByPhoneRes{
 			UserId: req.Phone,
 		}))
 }
 
-func PostLoginByWechat(ctx *gin.Context) {
+func postLoginByWechat(ctx *gin.Context) {
 
 }

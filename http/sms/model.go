@@ -19,6 +19,5 @@ type Code struct {
 	Phone    string   `json:"phone"`
 	CodeType CodeType `json:"codeType"`
 	Code     string   `json:"code"`
-	Day      string   `json:"day"`
 	Ip       string   `json:"ip"`
 }

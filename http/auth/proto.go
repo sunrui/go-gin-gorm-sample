@@ -5,13 +5,11 @@
  */
 package auth
 
-type LoginByPhoneReq struct {
+type loginByPhoneReq struct {
 	Phone   string `json:"phone" binding:"required" validate:"min=11,max=11"`
 	SmsCode string `json:"smsCode" binding:"required" validate:"min=6,max=6"`
 }
 
-//PhoneNotExist bool   `json:"phoneNotExist"`
-
-type LoginByPhoneRes struct {
+type loginByPhoneRes struct {
 	UserId string `json:"userId"`
 }

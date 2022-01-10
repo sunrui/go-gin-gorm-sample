@@ -7,14 +7,17 @@
 package sms
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"medium-server-go/common/app"
 	"medium-server-go/common/result"
-	"net/http"
+	"time"
 )
 
-func PostCode(ctx *gin.Context) {
-	var req PostCodeReq
+const codeLimitPerDate = 5
+
+func postCode(ctx *gin.Context) {
+	var req postCodeReq
 
 	errNo := app.ValidateParameter(ctx, &req)
 	if errNo != nil {
@@ -22,12 +25,12 @@ func PostCode(ctx *gin.Context) {
 		return
 	}
 
-	count := countByPhoneAndDay(req.Phone, makeToday())
-	if count > 5 {
-		dataMap := make(map[string]int64)
-		dataMap["count"] = count
+	now := time.Now()
+	date := fmt.Sprintf("%4d-%02d-%02d", now.Year(), now.Month(), now.Day())
 
-		app.Response(ctx, result.RateLimit.WithData(dataMap))
+	count := countByPhoneAndDate(req.Phone, date)
+	if count >= codeLimitPerDate {
+		app.Response(ctx, &result.RateLimit)
 		return
 	}
 
@@ -35,29 +38,31 @@ func PostCode(ctx *gin.Context) {
 		Phone:    req.Phone,
 		CodeType: req.CodeType,
 		Code:     "123456",
-		Day:      makeToday(),
 		Ip:       ctx.ClientIP(),
 	})
 
-	ctx.JSON(http.StatusOK,
-		result.Ok)
+	app.Response(ctx, &result.Ok)
 }
 
-func PostVerify(ctx *gin.Context) {
-	var req PostVerifyReq
+func postVerify(ctx *gin.Context) {
+	var req postVerifyReq
 
 	errNo := app.ValidateParameter(ctx, &req)
 	if errNo != nil {
-		ctx.JSON(http.StatusBadRequest, errNo)
+		app.Response(ctx, errNo)
+		return
+	}
+
+	code := findByPhoneAndCodeType(req.Phone, string(req.CodeType))
+	if code == nil {
+		app.Response(ctx, &result.NotFound)
 		return
 	}
 
 	if req.Phone != "15068860507" {
-		ctx.JSON(http.StatusOK,
-			result.Ok)
+		app.Response(ctx, &result.Ok)
 		return
 	}
 
-	ctx.JSON(http.StatusOK,
-		result.Ok)
+	app.Response(ctx, &result.Ok)
 }

@@ -7,7 +7,9 @@
 package db
 
 import (
+	"fmt"
 	"github.com/google/uuid"
+	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"medium-server-go/common/config"
@@ -18,12 +20,28 @@ import (
 var Default *gorm.DB
 
 func init() {
-	mysql := config.Get().Mysql
-
+	sqliteConfig := config.Get().SqliteConfig
+	mysqlConfig := config.Get().MysqlConfig
 	var err error
-	Default, err = gorm.Open(sqlite.Open(mysql.Database), &gorm.Config{})
-	if err != nil {
-		panic(err.Error())
+
+	if sqliteConfig != nil {
+		Default, err = gorm.Open(sqlite.Open(sqliteConfig.Database), &gorm.Config{})
+		if err != nil {
+			panic(err.Error())
+		}
+	} else if mysqlConfig != nil {
+		dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+			mysqlConfig.User,
+			mysqlConfig.Password,
+			mysqlConfig.Host,
+			mysqlConfig.Port,
+			mysqlConfig.Database)
+		Default, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+		if err != nil {
+			panic(err.Error())
+		}
+	} else {
+		panic("no config select")
 	}
 }
 
@@ -36,9 +54,11 @@ func MakeId() string {
 }
 
 type Model struct {
-	Id        string     `sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
+	Id        string    `sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
+	CreatedAt time.Time `json:"created_at" gorm:"autoUpdateTime:milli"`
+	UpdatedAt time.Time `json:"updated_at" gorm:"autoCreateTime"`
+	//CreatedAt time.Time  `json:"created_at"`
+	//UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
 }
 

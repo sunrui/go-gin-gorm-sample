@@ -14,6 +14,11 @@ import (
 	"time"
 )
 
+func jsonResponseMiddleware(ctx *gin.Context) {
+	ctx.Writer.Header().Set("Content-Type", "application/json; charset=utf-8")
+	ctx.Next()
+}
+
 func authMiddleware(ctx *gin.Context) {
 	ctx.Next()
 }
