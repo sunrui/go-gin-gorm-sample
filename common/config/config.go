@@ -10,10 +10,6 @@ import (
 	"os"
 )
 
-type SqliteConfig struct {
-	Database string
-}
-
 type MysqlConfig struct {
 	Host     string
 	Port     int
@@ -22,34 +18,44 @@ type MysqlConfig struct {
 	Password string
 }
 
-type Config struct {
-	MysqlConfig  *MysqlConfig
-	SqliteConfig *SqliteConfig
+type RedisConfig struct {
+	Host     string
+	Port     int
+	Password string
 }
 
-func createConfig(mysqlConfig *MysqlConfig, sqliteConfig *SqliteConfig) Config {
+type Config struct {
+	MysqlConfig MysqlConfig
+	RedisConfig RedisConfig
+}
+
+func createConfig(mysqlConfig MysqlConfig, redisConfig RedisConfig) Config {
 	return Config{
-		MysqlConfig:  mysqlConfig,
-		SqliteConfig: sqliteConfig,
+		MysqlConfig: mysqlConfig,
+		RedisConfig: redisConfig,
 	}
 }
 
 var (
 	debug = createConfig(
-		nil,
-		&SqliteConfig{
-			Database: "medium.db",
+		MysqlConfig{
+			Host:     "localhost",
+			Port:     3306,
+			Database: "medium",
+			User:     "root",
+			Password: "root",
 		},
+		RedisConfig{},
 	)
 	release = createConfig(
-		&MysqlConfig{
-			Host:     "host",
-			Port:     3316,
-			Database: "medium.db",
-			User:     "user",
-			Password: "password",
+		MysqlConfig{
+			Host:     "localhost",
+			Port:     3306,
+			Database: "medium",
+			User:     "root",
+			Password: "root",
 		},
-		nil,
+		RedisConfig{},
 	)
 )
 

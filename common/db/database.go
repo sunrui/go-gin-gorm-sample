@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"gorm.io/driver/mysql"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"medium-server-go/common/config"
 	"strings"
@@ -20,28 +19,18 @@ import (
 var Default *gorm.DB
 
 func init() {
-	sqliteConfig := config.Get().SqliteConfig
 	mysqlConfig := config.Get().MysqlConfig
 	var err error
 
-	if sqliteConfig != nil {
-		Default, err = gorm.Open(sqlite.Open(sqliteConfig.Database), &gorm.Config{})
-		if err != nil {
-			panic(err.Error())
-		}
-	} else if mysqlConfig != nil {
-		dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-			mysqlConfig.User,
-			mysqlConfig.Password,
-			mysqlConfig.Host,
-			mysqlConfig.Port,
-			mysqlConfig.Database)
-		Default, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-		if err != nil {
-			panic(err.Error())
-		}
-	} else {
-		panic("no config select")
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
+		mysqlConfig.User,
+		mysqlConfig.Password,
+		mysqlConfig.Host,
+		mysqlConfig.Port,
+		mysqlConfig.Database)
+	Default, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic(err.Error())
 	}
 }
 
