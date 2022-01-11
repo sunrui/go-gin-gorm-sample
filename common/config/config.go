@@ -45,7 +45,11 @@ var (
 			User:     "root",
 			Password: "root",
 		},
-		RedisConfig{},
+		RedisConfig{
+			Host:     "localhost",
+			Port:     6379,
+			Password: "",
+		},
 	)
 	release = createConfig(
 		MysqlConfig{
@@ -55,7 +59,11 @@ var (
 			User:     "root",
 			Password: "root",
 		},
-		RedisConfig{},
+		RedisConfig{
+			Host:     "localhost",
+			Port:     6379,
+			Password: "",
+		},
 	)
 )
 

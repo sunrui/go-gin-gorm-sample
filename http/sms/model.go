@@ -11,13 +11,16 @@ import "medium-server-go/common/db"
 type CodeType string
 
 const (
-	LOGIN = "LOGIN"
+	LOGIN CodeType = "LOGIN"
 )
 
 type Code struct {
 	db.Model
-	Phone    string   `json:"phone"`
-	CodeType CodeType `json:"codeType"`
-	Code     string   `json:"code"`
-	Ip       string   `json:"ip"`
+	Phone     string   `json:"phone"`
+	CodeType  CodeType `json:"codeType"`
+	Code      string   `json:"code"`
+	Ip        string   `json:"ip"`
+	UserAgent string   `json:"userAgent"`
+	Success   bool     `json:"success"`
+	Comment   string   `json:"comment"`
 }

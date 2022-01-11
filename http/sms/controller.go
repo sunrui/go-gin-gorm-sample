@@ -32,10 +32,13 @@ func postCode(ctx *gin.Context) {
 	sixNumber := createSixNumber()
 
 	createCode(&Code{
-		Phone:    req.Phone,
-		CodeType: req.CodeType,
-		Code:     sixNumber,
-		Ip:       ctx.ClientIP(),
+		Phone:     req.Phone,
+		CodeType:  req.CodeType,
+		Code:      sixNumber,
+		Ip:        ctx.ClientIP(),
+		UserAgent: ctx.Request.UserAgent(),
+		Success:   true,
+		Comment:   "",
 	})
 
 	app.Response(ctx, &result.Ok)
@@ -51,13 +54,13 @@ func postVerify(ctx *gin.Context) {
 	}
 
 	code := findByPhoneAndCodeType(req.Phone, string(req.CodeType))
-	if code == nil {
+	if code == nil || code.CodeType != req.CodeType {
 		app.Response(ctx, &result.NotFound)
 		return
 	}
 
-	if req.Phone != "15068860507" {
-		app.Response(ctx, &result.Ok)
+	if code.Code != req.Code {
+		app.Response(ctx, &result.NotMatch)
 		return
 	}
 
