@@ -10,21 +10,19 @@ import "medium-server-go/common/app"
 
 // 获取短信路由对象
 func GetRouter() app.Router {
-	var router app.Router
-
-	router.GroupName = "/sms"
-	router.NeedAuth = true
-	router.RouterPaths = []app.RouterPath{
-		{
-			HttpMethod:   "POST",
-			RelativePath: "/code",
-			HandlerFunc:  postCode,
-		}, {
-			HttpMethod:   "POST",
-			RelativePath: "/verify",
-			HandlerFunc:  postVerify,
+	return app.Router{
+		GroupName: "/sms",
+		NeedAuth:  false,
+		RouterPaths: []app.RouterPath{
+			{
+				HttpMethod:   "POST",
+				RelativePath: "/code",
+				HandlerFunc:  postCode,
+			}, {
+				HttpMethod:   "POST",
+				RelativePath: "/verify",
+				HandlerFunc:  postVerify,
+			},
 		},
 	}
-
-	return router
 }

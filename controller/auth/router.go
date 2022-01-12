@@ -11,21 +11,19 @@ import (
 
 // 获取授权路由对象
 func GetRouter() app.Router {
-	var router app.Router
-
-	router.GroupName = "/auth"
-	router.NeedAuth = true
-	router.RouterPaths = []app.RouterPath{
-		{
-			HttpMethod:   "POST",
-			RelativePath: "/login/phone",
-			HandlerFunc:  postLoginByPhone,
-		}, {
-			HttpMethod:   "POST",
-			RelativePath: "/login/wechat",
-			HandlerFunc:  postLoginByWechat,
+	return app.Router{
+		GroupName: "/auth",
+		NeedAuth:  false,
+		RouterPaths: []app.RouterPath{
+			{
+				HttpMethod:   "POST",
+				RelativePath: "/login/phone",
+				HandlerFunc:  postLoginByPhone,
+			}, {
+				HttpMethod:   "POST",
+				RelativePath: "/login/wechat",
+				HandlerFunc:  postLoginByWechat,
+			},
 		},
 	}
-
-	return router
 }
