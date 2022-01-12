@@ -12,35 +12,27 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
-	"medium-server-go/common/result"
 	"strings"
 )
 
 // 请求参数过滤
-func ValidateParameter(ctx *gin.Context, req interface{}) *result.Result {
+func ValidateParameter(ctx *gin.Context, req interface{}) (haveError bool, data interface{}) {
+	var validationErrors validator.ValidationErrors
 	var err error
 
 	// 默认以 json 方式解析
 	if err = ctx.MustBindWith(&req, binding.JSON); err != nil {
-		goto haveError
+		goto ERROR
 	}
 
+	// 存在解析参数错误
 	if err = validator.New().Struct(req); err != nil {
-		goto haveError
+		goto ERROR
 	}
 
-	return nil
+	return false, nil
 
-haveError:
-	var validationErrors validator.ValidationErrors
-
-	// 解析内容出错
-	if !errors.As(err, &validationErrors) {
-		dataMap := make(map[string]interface{})
-		dataMap["error"] = fmt.Sprintf("%s", err)
-		return result.ParameterError.WithData(dataMap)
-	}
-
+ERROR:
 	// 参数错误对象
 	type ParamError struct {
 		Field    string `json:"field"`    // 变量名
@@ -48,6 +40,14 @@ haveError:
 	}
 
 	var paramErrors []ParamError
+
+	// 解析内容出错
+	if !errors.As(err, &validationErrors) {
+		dataMap := make(map[string]interface{})
+		dataMap["error"] = fmt.Sprintf("%s", err)
+
+		return true, dataMap
+	}
 
 	// 遍历解析参数
 	for _, e := range validationErrors {
@@ -65,5 +65,5 @@ haveError:
 	dataMap := make(map[string]interface{})
 	dataMap["errors"] = paramErrors
 
-	return result.ParameterError.WithData(dataMap)
+	return true, dataMap
 }

@@ -21,9 +21,9 @@ func postCode(ctx *gin.Context) {
 	var req postCodeReq
 
 	// 较验参数
-	errNo := app.ValidateParameter(ctx, &req)
-	if errNo != nil {
-		app.Response(ctx, errNo)
+	haveError, dataMap := app.ValidateParameter(ctx, &req)
+	if haveError {
+		app.Response(ctx, result.ParameterError.WithData(dataMap))
 		return
 	}
 
@@ -65,9 +65,9 @@ func postVerify(ctx *gin.Context) {
 	var req postVerifyReq
 
 	// 较验参数
-	errNo := app.ValidateParameter(ctx, &req)
-	if errNo != nil {
-		app.Response(ctx, errNo)
+	haveError, dataMap := app.ValidateParameter(ctx, &req)
+	if haveError {
+		app.Response(ctx, result.ParameterError.WithData(dataMap))
 		return
 	}
 

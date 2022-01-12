@@ -16,9 +16,10 @@ import (
 func postLoginByPhone(ctx *gin.Context) {
 	var req loginByPhoneReq
 
-	errNo := app.ValidateParameter(ctx, &req)
-	if errNo != nil {
-		ctx.JSON(http.StatusBadRequest, errNo)
+	// 较验参数
+	haveError, dataMap := app.ValidateParameter(ctx, &req)
+	if haveError {
+		app.Response(ctx, result.ParameterError.WithData(dataMap))
 		return
 	}
 
@@ -30,5 +31,12 @@ func postLoginByPhone(ctx *gin.Context) {
 
 // 微信登录
 func postLoginByWechat(ctx *gin.Context) {
+	var req loginByPhoneReq
 
+	// 较验参数
+	haveError, dataMap := app.ValidateParameter(ctx, &req)
+	if haveError {
+		app.Response(ctx, result.ParameterError.WithData(dataMap))
+		return
+	}
 }
