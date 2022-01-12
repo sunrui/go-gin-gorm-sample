@@ -16,7 +16,7 @@ import (
 )
 
 // 请求参数过滤
-func ValidateParameter(ctx *gin.Context, req interface{}) (ok bool, data interface{}) {
+func ValidateParameter(ctx *gin.Context, req interface{}) (errData interface{}, ok bool) {
 	var validationErrors validator.ValidationErrors
 	var err error
 
@@ -30,7 +30,7 @@ func ValidateParameter(ctx *gin.Context, req interface{}) (ok bool, data interfa
 		goto ERROR
 	}
 
-	return true, nil
+	return nil, true
 
 ERROR:
 	// 参数错误对象
@@ -46,7 +46,7 @@ ERROR:
 		dataMap := make(map[string]interface{})
 		dataMap["error"] = fmt.Sprintf("%s", err)
 
-		return false, dataMap
+		return dataMap, false
 	}
 
 	// 遍历解析参数
@@ -65,5 +65,5 @@ ERROR:
 	dataMap := make(map[string]interface{})
 	dataMap["errors"] = paramErrors
 
-	return false, dataMap
+	return dataMap, false
 }

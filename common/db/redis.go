@@ -23,7 +23,7 @@ func init() {
 	Redis = redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%d", redisConfig.Host, redisConfig.Port),
 		Password: redisConfig.Password,
-		DB:       0,
+		DB:       redisConfig.Database,
 	})
 
 	// 使用请求 flush 检测是否连接成功

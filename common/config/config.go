@@ -24,6 +24,7 @@ type RedisConfig struct {
 	Host     string // 主机
 	Port     int    // 端口
 	Password string // 密码
+	Database int    // 数据库s
 }
 
 type Config struct {
@@ -53,6 +54,7 @@ var (
 			Host:     "localhost",
 			Port:     6379,
 			Password: "",
+			Database: 0,
 		},
 	)
 
@@ -69,6 +71,7 @@ var (
 			Host:     "localhost",
 			Port:     6379,
 			Password: "",
+			Database: 0,
 		},
 	)
 )

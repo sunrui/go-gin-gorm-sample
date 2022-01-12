@@ -7,7 +7,7 @@
 package sms
 
 import (
-	"fmt"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"medium-server-go/common/app"
 	"medium-server-go/common/result"
@@ -21,7 +21,7 @@ func postCode(ctx *gin.Context) {
 	var req postCodeReq
 
 	// 较验参数
-	ok, data := app.ValidateParameter(ctx, &req)
+	data, ok := app.ValidateParameter(ctx, &req)
 	if !ok {
 		app.Response(ctx, result.ParameterError.WithData(data))
 		return
@@ -41,6 +41,18 @@ func postCode(ctx *gin.Context) {
 	// 调用服务发送验证码
 	channel, reqId, err := smsProvider.Send(req.Phone, req.CodeType, sixNumber)
 
+	// 备注对象
+	type comment struct {
+		Chanel string `json:"chanel"`
+		ReqId  string `json:"reqId"`
+	}
+
+	// 将备注对象转 json
+	marshal, _ := json.Marshal(comment{
+		Chanel: channel,
+		ReqId:  reqId,
+	})
+
 	// 存储发送记录
 	saveCode(&Code{
 		Phone:     req.Phone,
@@ -48,13 +60,22 @@ func postCode(ctx *gin.Context) {
 		Code:      sixNumber,
 		Ip:        ctx.ClientIP(),
 		UserAgent: ctx.Request.UserAgent(),
-		Success:   err != nil,
-		Comment:   fmt.Sprintf("channel = %s, reqId = %s", channel, reqId),
+		Success:   err == nil,
+		Comment:   string(marshal),
 	})
 
+	// 发送验证码失败
 	if err != nil {
-		//db.Redis.Set("hello", "world", 5e10)
+		app.Response(ctx, result.InternalError.WithData(err))
+		return
 	}
+
+	// 将验证码缓存到 redis 中
+	cache := Cache{
+		Phone:    req.Phone,
+		CodeType: req.CodeType,
+	}
+	cache.Save(sixNumber)
 
 	// 发送成功
 	app.Response(ctx, &result.Ok)
@@ -65,21 +86,29 @@ func postVerify(ctx *gin.Context) {
 	var req postVerifyReq
 
 	// 较验参数
-	ok, data := app.ValidateParameter(ctx, &req)
+	data, ok := app.ValidateParameter(ctx, &req)
 	if !ok {
 		app.Response(ctx, result.ParameterError.WithData(data))
 		return
 	}
 
-	// 查找用户发送记录
-	code := findByPhoneAndCodeType(req.Phone, string(req.CodeType))
-	if code == nil || code.CodeType != req.CodeType {
+	// 缓存对象
+	cache := Cache{
+		Phone:    req.Phone,
+		CodeType: req.CodeType,
+	}
+
+	// 获取缓存数据
+	ok, cacheValue := cache.GetValue()
+	if !ok {
 		app.Response(ctx, &result.NotFound)
-		return
 	}
 
 	// 比较验证码
-	if code.Code != req.Code {
+	if cacheValue.Code != req.Code {
+		// 增加缓存引用记数
+		cache.AddVerifyTime()
+
 		app.Response(ctx, &result.NotMatch)
 		return
 	}

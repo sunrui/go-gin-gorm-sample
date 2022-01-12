@@ -25,15 +25,14 @@ func catch(ctx *gin.Context) {
 			dataMap["error"] = err
 		}
 
-		ret := result.InternalError.WithData(dataMap)
-		Response(ctx, result.InternalError.WithData(ret))
+		Response(ctx, result.InternalError.WithData(dataMap))
 	}
 }
 
 // 异常捕获对象
 func catchHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		// 为了更好的调试，在开发环境中直接输出系统错误
+		// 为了更好的调试，在开发环境中输出系统错误。
 		if !config.IsDebugMode() {
 			defer catch(ctx)
 		}
