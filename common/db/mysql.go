@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-var Default *gorm.DB
+var Mysql *gorm.DB
 
 func init() {
 	mysqlConfig := config.Get().MysqlConfig
@@ -28,7 +28,7 @@ func init() {
 		mysqlConfig.Host,
 		mysqlConfig.Port,
 		mysqlConfig.Database)
-	Default, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	Mysql, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err.Error())
 	}

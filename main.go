@@ -7,8 +7,8 @@ package main
 
 import (
 	"medium-server-go/common/app"
-	"medium-server-go/http/auth"
-	"medium-server-go/http/sms"
+	"medium-server-go/controller/auth"
+	"medium-server-go/controller/sms"
 )
 
 func main() {

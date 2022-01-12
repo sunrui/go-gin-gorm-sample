@@ -15,7 +15,7 @@ import (
 )
 
 func init() {
-	err := db.Default.AutoMigrate(&Code{})
+	err := db.Mysql.AutoMigrate(&Code{})
 	if err != nil {
 		panic(err.Error())
 	}
@@ -33,12 +33,12 @@ func createSixNumber() string {
 }
 
 func createCode(code *Code) {
-	db.Default.Save(code)
+	db.Mysql.Save(code)
 }
 
 func findByPhoneAndCodeType(phone string, codeType string) *Code {
 	var code Code
-	query := db.Default.Where("phone = ? AND code_type = ? AND date(created_at) = ?", phone, codeType, getNowDate()).Last(&code)
+	query := db.Mysql.Where("phone = ? AND code_type = ? AND date(created_at) = ?", phone, codeType, getNowDate()).Last(&code)
 	if query.Error == gorm.ErrRecordNotFound {
 		return nil
 	}
@@ -53,7 +53,7 @@ func findByPhoneAndCodeType(phone string, codeType string) *Code {
 func countByPhoneAndDate(phone string, date string) int64 {
 	var count int64
 
-	query := db.Default.Model(&Code{}).Where("phone = ? AND DATE(created_at) = ?", phone, date).Count(&count)
+	query := db.Mysql.Model(&Code{}).Where("phone = ? AND DATE(created_at) = ?", phone, date).Count(&count)
 	if query.Error != nil {
 		panic(query.Error.Error())
 	}

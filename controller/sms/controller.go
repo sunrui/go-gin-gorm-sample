@@ -7,9 +7,11 @@
 package sms
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"medium-server-go/common/app"
 	"medium-server-go/common/result"
+	"medium-server-go/service"
 )
 
 const codeLimitPerDate = 5
@@ -30,6 +32,9 @@ func postCode(ctx *gin.Context) {
 	}
 
 	sixNumber := createSixNumber()
+	smsService := service.Sms{}
+
+	channel, reqId, err := smsService.Send(req.Phone, req.CodeType, sixNumber)
 
 	createCode(&Code{
 		Phone:     req.Phone,
@@ -37,9 +42,13 @@ func postCode(ctx *gin.Context) {
 		Code:      sixNumber,
 		Ip:        ctx.ClientIP(),
 		UserAgent: ctx.Request.UserAgent(),
-		Success:   true,
-		Comment:   "",
+		Success:   err != nil,
+		Comment:   fmt.Sprintf("channel = %s, reqId = %s", channel, reqId),
 	})
+
+	if err != nil {
+		//db.Redis.Set("hello", "world", 5e10)
+	}
 
 	app.Response(ctx, &result.Ok)
 }
