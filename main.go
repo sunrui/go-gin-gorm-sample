@@ -14,8 +14,12 @@ import (
 func main() {
 	server := app.New()
 
-	server.RegisterRouter(sms.GetRouter())
-	server.RegisterRouter(auth.GetRouter())
+	for _, router := range []app.Router{
+		sms.GetRouter(),
+		auth.GetRouter(),
+	} {
+		server.RegisterRouter(router)
+	}
 
 	server.Run(8080)
 }
