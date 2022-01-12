@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"medium-server-go/common/app"
 	"medium-server-go/common/result"
-	"medium-server-go/service"
+	"medium-server-go/provider"
 )
 
 const codeLimitPerDate = 5
@@ -32,9 +32,9 @@ func postCode(ctx *gin.Context) {
 	}
 
 	sixNumber := createSixNumber()
-	smsService := service.Sms{}
+	smsProvider := provider.Sms{}
 
-	channel, reqId, err := smsService.Send(req.Phone, req.CodeType, sixNumber)
+	channel, reqId, err := smsProvider.Send(req.Phone, req.CodeType, sixNumber)
 
 	createCode(&Code{
 		Phone:     req.Phone,

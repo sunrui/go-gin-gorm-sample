@@ -4,16 +4,16 @@
  * Date: 2022/01/12 17:16:12
  */
 
-package service
+package provider
 
 import (
 	"fmt"
-	"medium-server-go/controller/sms"
+	"medium-server-go/enum"
 )
 
 type Sms struct{}
 
-func (sms *Sms) Send(phone string, codeType sms.CodeType, sixNumber string) (channel string, reqId string, err error) {
+func (sms *Sms) Send(phone string, codeType enum.CodeType, sixNumber string) (channel string, reqId string, err error) {
 	fmt.Println("send %s, %s, %s", phone, codeType, sixNumber)
 
 	channel = "aliyun"

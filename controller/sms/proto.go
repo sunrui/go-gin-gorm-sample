@@ -6,13 +6,15 @@
 
 package sms
 
+import "medium-server-go/enum"
+
 type postCodeReq struct {
-	Phone    string   `json:"phone" binding:"required" validate:"len=11,numeric"`
-	CodeType CodeType `json:"codeType" binding:"required" validate:"oneof=LOGIN"`
+	Phone    string        `json:"phone" binding:"required" validate:"len=11,numeric"`
+	CodeType enum.CodeType `json:"codeType" binding:"required" validate:"oneof=LOGIN"`
 }
 
 type postVerifyReq struct {
-	Phone    string   `json:"phone" binding:"required" validate:"len=11,numeric"`
-	CodeType CodeType `json:"codeType" binding:"required" validate:"oneof=LOGIN"`
-	Code     string   `json:"code" binding:"required" validate:"len=6,numeric"`
+	Phone    string        `json:"phone" binding:"required" validate:"len=11,numeric"`
+	CodeType enum.CodeType `json:"codeType" binding:"required" validate:"oneof=LOGIN"`
+	Code     string        `json:"code" binding:"required" validate:"len=6,numeric"`
 }

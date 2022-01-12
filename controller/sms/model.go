@@ -6,21 +6,18 @@
 
 package sms
 
-import "medium-server-go/common/db"
-
-type CodeType string
-
-const (
-	LOGIN CodeType = "LOGIN"
+import (
+	"medium-server-go/common/db"
+	"medium-server-go/enum"
 )
 
 type Code struct {
 	db.Model
-	Phone     string   `json:"phone"`
-	CodeType  CodeType `json:"codeType"`
-	Code      string   `json:"code"`
-	Ip        string   `json:"ip"`
-	UserAgent string   `json:"userAgent"`
-	Success   bool     `json:"success"`
-	Comment   string   `json:"comment"`
+	Phone     string        `json:"phone"`
+	CodeType  enum.CodeType `json:"codeType"`
+	Code      string        `json:"code"`
+	Ip        string        `json:"ip"`
+	UserAgent string        `json:"userAgent"`
+	Success   bool          `json:"success"`
+	Comment   string        `json:"comment"`
 }
