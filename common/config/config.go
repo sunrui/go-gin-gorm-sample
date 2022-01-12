@@ -27,6 +27,7 @@ type RedisConfig struct {
 	Database int    // 数据库s
 }
 
+// 配置对象
 type Config struct {
 	MysqlConfig MysqlConfig // Mysql 配置对象
 	RedisConfig RedisConfig // Redis 配置对象
