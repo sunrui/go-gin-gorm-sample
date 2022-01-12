@@ -16,27 +16,33 @@ import (
 
 const codeLimitPerDate = 5
 
+// 发送验证码
 func postCode(ctx *gin.Context) {
 	var req postCodeReq
 
+	// 较验参数
 	errNo := app.ValidateParameter(ctx, &req)
 	if errNo != nil {
 		app.Response(ctx, errNo)
 		return
 	}
 
+	// 获取当天发送条数
 	count := countByPhoneAndDate(req.Phone, getNowDate())
 	if count >= codeLimitPerDate {
 		app.Response(ctx, &result.RateLimit)
 		return
 	}
 
+	// 创建 6 位验证码
 	sixNumber := createSixNumber()
 	smsProvider := provider.Sms{}
 
+	// 调用服务发送验证码
 	channel, reqId, err := smsProvider.Send(req.Phone, req.CodeType, sixNumber)
 
-	createCode(&Code{
+	// 存储发送记录
+	saveCode(&Code{
 		Phone:     req.Phone,
 		CodeType:  req.CodeType,
 		Code:      sixNumber,
@@ -50,28 +56,34 @@ func postCode(ctx *gin.Context) {
 		//db.Redis.Set("hello", "world", 5e10)
 	}
 
+	// 发送成功
 	app.Response(ctx, &result.Ok)
 }
 
+// 较验验证码
 func postVerify(ctx *gin.Context) {
 	var req postVerifyReq
 
+	// 较验参数
 	errNo := app.ValidateParameter(ctx, &req)
 	if errNo != nil {
 		app.Response(ctx, errNo)
 		return
 	}
 
+	// 查找用户发送记录
 	code := findByPhoneAndCodeType(req.Phone, string(req.CodeType))
 	if code == nil || code.CodeType != req.CodeType {
 		app.Response(ctx, &result.NotFound)
 		return
 	}
 
+	// 比较验证码
 	if code.Code != req.Code {
 		app.Response(ctx, &result.NotMatch)
 		return
 	}
 
+	// 较验成功
 	app.Response(ctx, &result.Ok)
 }

@@ -10,25 +10,28 @@ import (
 	"os"
 )
 
+// Mysql 配置对象
 type MysqlConfig struct {
-	Host     string
-	Port     int
-	Database string
-	User     string
-	Password string
+	Host     string // 主机
+	Port     int    // 端口
+	Database string // 数据库
+	User     string // 用户名
+	Password string // 密码
 }
 
+// Redis 配置对象
 type RedisConfig struct {
-	Host     string
-	Port     int
-	Password string
+	Host     string // 主机
+	Port     int    // 端口
+	Password string // 密码
 }
 
 type Config struct {
-	MysqlConfig MysqlConfig
-	RedisConfig RedisConfig
+	MysqlConfig MysqlConfig // Mysql 配置对象
+	RedisConfig RedisConfig // Redis 配置对象
 }
 
+// 创建配置对象
 func createConfig(mysqlConfig MysqlConfig, redisConfig RedisConfig) Config {
 	return Config{
 		MysqlConfig: mysqlConfig,
@@ -37,6 +40,7 @@ func createConfig(mysqlConfig MysqlConfig, redisConfig RedisConfig) Config {
 }
 
 var (
+	// 调试环境配置
 	debug = createConfig(
 		MysqlConfig{
 			Host:     "localhost",
@@ -51,6 +55,8 @@ var (
 			Password: "",
 		},
 	)
+
+	// 正式环境配置
 	release = createConfig(
 		MysqlConfig{
 			Host:     "localhost",
@@ -67,6 +73,7 @@ var (
 	)
 )
 
+// 获取当前配置
 func Get() Config {
 	if IsDebugMode() {
 		return debug
@@ -75,6 +82,7 @@ func Get() Config {
 	}
 }
 
+// 是否调试模式
 func IsDebugMode() bool {
 	return os.Getenv("release") == ""
 }

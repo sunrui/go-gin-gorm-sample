@@ -9,6 +9,7 @@ import (
 	"medium-server-go/common/app"
 )
 
+// 获取授权路由对象
 func GetRouter() app.Router {
 	var router app.Router
 

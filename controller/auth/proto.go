@@ -5,11 +5,13 @@
  */
 package auth
 
+// 手机号码登录请求
 type loginByPhoneReq struct {
-	Phone   string `json:"phone" binding:"required" validate:"min=11,max=11"`
-	SmsCode string `json:"smsCode" binding:"required" validate:"min=6,max=6"`
+	Phone string `json:"phone" binding:"required" validate:"len=11"` // 手机号
+	Code  string `json:"code" binding:"required" validate:"len=6"`   // 验证码
 }
 
+// 手机号码登录结果
 type loginByPhoneRes struct {
-	UserId string `json:"userId"`
+	UserId string `json:"userId"` // 用户 id
 }

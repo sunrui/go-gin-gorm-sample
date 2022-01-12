@@ -11,13 +11,14 @@ import (
 	"medium-server-go/enum"
 )
 
+// 验证码对象
 type Code struct {
-	db.Model
-	Phone     string        `json:"phone"`
-	CodeType  enum.CodeType `json:"codeType"`
-	Code      string        `json:"code"`
-	Ip        string        `json:"ip"`
-	UserAgent string        `json:"userAgent"`
-	Success   bool          `json:"success"`
-	Comment   string        `json:"comment"`
+	db.Model                // 通用参数
+	Phone     string        `json:"phone"`     // 手机号
+	CodeType  enum.CodeType `json:"codeType"`  // 短信类型
+	Code      string        `json:"code"`      // 验证码
+	Ip        string        `json:"ip"`        // ip 地址
+	UserAgent string        `json:"userAgent"` // 用户 ua
+	Success   bool          `json:"success"`   // 是否发送成功
+	Comment   string        `json:"comment"`   // 备注
 }

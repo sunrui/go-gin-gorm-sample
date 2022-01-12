@@ -14,17 +14,24 @@ import (
 	"time"
 )
 
+// 输出 json 声明中间件
 func jsonResponseMiddleware(ctx *gin.Context) {
 	ctx.Writer.Header().Set("Content-Type", "application/json; charset=utf-8")
 	ctx.Next()
 }
 
+// 授权中间件
 func authMiddleware(ctx *gin.Context) {
 	ctx.Next()
 }
 
-func rateLimitMiddleware(fillInterval time.Duration, cap, quantum int64) gin.HandlerFunc {
-	bucket := ratelimit.NewBucketWithQuantum(fillInterval, cap, quantum)
+// 流量限制中间件
+//
+// @fillInterval 间隔单位
+// @capacity 令牌桶容量
+// @quantum 每隔多久
+func rateLimitMiddleware(fillInterval time.Duration, capacity, quantum int64) gin.HandlerFunc {
+	bucket := ratelimit.NewBucketWithQuantum(fillInterval, capacity, quantum)
 
 	return func(ctx *gin.Context) {
 		if bucket.TakeAvailable(1) < 1 {

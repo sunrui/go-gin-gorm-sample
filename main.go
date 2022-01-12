@@ -12,8 +12,10 @@ import (
 )
 
 func main() {
+	// 创建服务
 	server := app.New()
 
+	// 注册路由
 	for _, router := range []app.Router{
 		sms.GetRouter(),
 		auth.GetRouter(),
@@ -21,5 +23,6 @@ func main() {
 		server.RegisterRouter(router)
 	}
 
+	// 启动服务
 	server.Run(8080)
 }

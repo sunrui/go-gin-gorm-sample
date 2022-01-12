@@ -12,6 +12,7 @@ import (
 	"net/http"
 )
 
+// 手机号码登录
 func postLoginByPhone(ctx *gin.Context) {
 	var req loginByPhoneReq
 
@@ -21,18 +22,13 @@ func postLoginByPhone(ctx *gin.Context) {
 		return
 	}
 
-	if req.Phone != "15068860507" {
-		ctx.JSON(http.StatusOK,
-			result.Ok.WithData(loginByPhoneRes{}))
-		return
-	}
-
 	ctx.JSON(http.StatusOK,
 		result.Ok.WithData(loginByPhoneRes{
 			UserId: req.Phone,
 		}))
 }
 
+// 微信登录
 func postLoginByWechat(ctx *gin.Context) {
 
 }

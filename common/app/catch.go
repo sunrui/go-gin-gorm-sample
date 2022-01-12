@@ -12,10 +12,12 @@ import (
 	"medium-server-go/common/result"
 )
 
+// 捕获对象，全部抛出可以使用 panic 方法。
 func catch(ctx *gin.Context) {
 	if err := recover(); err != nil {
 		dataMap := make(map[string]interface{})
 
+		// 判断是否抛出了 result 对象
 		res, ok := err.(*result.Result)
 		if ok {
 			dataMap["error"] = res.Data
@@ -28,8 +30,10 @@ func catch(ctx *gin.Context) {
 	}
 }
 
+// 异常捕获对象
 func catchHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		// 为了更好的调试，在开发环境中直接输出系统错误
 		if !config.IsDebugMode() {
 			defer catch(ctx)
 		}

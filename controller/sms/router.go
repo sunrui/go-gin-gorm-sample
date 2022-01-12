@@ -8,6 +8,7 @@ package sms
 
 import "medium-server-go/common/app"
 
+// 获取短信路由对象
 func GetRouter() app.Router {
 	var router app.Router
 
