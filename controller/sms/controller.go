@@ -100,24 +100,13 @@ func postVerify(ctx *gin.Context) {
 	}
 
 	// 获取缓存数据
-	codeCache := cache.GetValue()
-	if codeCache == nil {
+	if !cache.Exists() {
 		app.Response(ctx, &result.NotFound)
+		return
 	}
 
-	// 如果验证码较验错误
-	if codeCache.Code != req.Code {
-		// 增加缓存引用记数
-		codeCache.ErrVerify += 1
-
-		// 如果已经较验出错 5 次，移除现有验证码
-		if codeCache.ErrVerify == 5 {
-			cache.Del()
-		} else {
-			// 更新出错较验次数
-			cache.Save(*codeCache)
-		}
-
+	// 较验验证码
+	if !cache.Verify(req.Code) {
 		app.Response(ctx, &result.NotMatch)
 		return
 	}

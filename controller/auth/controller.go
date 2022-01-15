@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"medium-server-go/common/app"
 	"medium-server-go/common/result"
+	"medium-server-go/controller/sms"
 	"net/http"
 )
 
@@ -23,6 +24,23 @@ func postLoginByPhone(ctx *gin.Context) {
 		return
 	}
 
+	// 缓存对象
+	cache := sms.Cache{
+		Phone:    req.Phone,
+		CodeType: "LOGIN",
+	}
+
+	// 获取缓存数据
+	if !cache.Exists() {
+		app.Response(ctx, &result.NotFound)
+		return
+	}
+
+	// 较验验证码
+	if !cache.Verify(req.Code) {
+		app.Response(ctx, &result.NotMatch)
+		return
+	}
 	ctx.JSON(http.StatusOK,
 		result.Ok.WithData(loginByPhoneRes{
 			UserId: req.Phone,
