@@ -33,7 +33,7 @@ func postCode(ctx *gin.Context) {
 	}
 
 	// 创建 6 位验证码
-	sixNumber := createSixNumber()
+	sixNumber := randomCode()
 
 	// 调用服务发送验证码
 	channel, reqId, err := provider.Sms.Send(req.Phone, req.CodeType, sixNumber)

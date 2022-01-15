@@ -43,13 +43,13 @@ func (app *Server) RegisterRouter(router Router) {
 	for _, routerPath := range router.RouterPaths {
 		switch routerPath.HttpMethod {
 		case "GET":
-			groupRouter.GET(routerPath.RelativePath, catchHandler(routerPath.HandlerFunc))
+			groupRouter.GET(routerPath.RelativePath, exceptionHandler(routerPath.HandlerFunc))
 		case "POST":
-			groupRouter.POST(routerPath.RelativePath, catchHandler(routerPath.HandlerFunc))
+			groupRouter.POST(routerPath.RelativePath, exceptionHandler(routerPath.HandlerFunc))
 		case "PUT":
-			groupRouter.PUT(routerPath.RelativePath, catchHandler(routerPath.HandlerFunc))
+			groupRouter.PUT(routerPath.RelativePath, exceptionHandler(routerPath.HandlerFunc))
 		case "DELETE":
-			groupRouter.DELETE(routerPath.RelativePath, catchHandler(routerPath.HandlerFunc))
+			groupRouter.DELETE(routerPath.RelativePath, exceptionHandler(routerPath.HandlerFunc))
 		default:
 			panic("http method not supported")
 		}

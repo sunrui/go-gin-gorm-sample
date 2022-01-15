@@ -32,7 +32,7 @@ func getNowDate() string {
 }
 
 // 创建 6 位数字
-func createSixNumber() string {
+func randomCode() string {
 	return fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(1000000))
 }
 
