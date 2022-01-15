@@ -76,7 +76,7 @@ func (redisPool *redisPool) Set(key string, value interface{}, second time.Durat
 }
 
 // 获取字符串
-func (redisPool *redisPool) Get(key string) (value *string, ok bool) {
+func (redisPool *redisPool) Get(key string) *string {
 	pool := redisPool.pool.Get()
 	defer func() {
 		_ = pool.Close()
@@ -88,11 +88,11 @@ func (redisPool *redisPool) Get(key string) (value *string, ok bool) {
 	}
 
 	if reply == nil {
-		return nil, false
+		return nil
 	}
 
 	replyString := fmt.Sprintf("%s", reply)
-	return &replyString, true
+	return &replyString
 }
 
 // 获取对象
@@ -164,7 +164,7 @@ func (redisPool *redisPool) HashSet(hash string, key string, value interface{}) 
 }
 
 // 获取 hash 对象
-func (redisPool *redisPool) HashGet(hash string, key string) (value *string, ok bool) {
+func (redisPool *redisPool) HashGet(hash string, key string) *string {
 	pool := redisPool.pool.Get()
 	defer func() {
 		_ = pool.Close()
@@ -176,11 +176,11 @@ func (redisPool *redisPool) HashGet(hash string, key string) (value *string, ok 
 	}
 
 	if reply == nil {
-		return nil, false
+		return nil
 	}
 
 	replyString := fmt.Sprintf("%s", reply)
-	return &replyString, true
+	return &replyString
 }
 
 // 获取 hash 对象
