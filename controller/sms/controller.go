@@ -14,8 +14,6 @@ import (
 	"medium-server-go/provider"
 )
 
-const codeLimitPerDate = 5
-
 // 发送验证码
 func postCode(ctx *gin.Context) {
 	var req postCodeReq
@@ -27,9 +25,9 @@ func postCode(ctx *gin.Context) {
 		return
 	}
 
-	// 获取当天发送条数
+	// 获取当天发送条数，判断是否超出最大条数限制
 	count := countByPhoneAndDate(req.Phone, getNowDate())
-	if count >= codeLimitPerDate {
+	if count >= 5 {
 		app.Response(ctx, &result.RateLimit)
 		return
 	}
@@ -75,7 +73,10 @@ func postCode(ctx *gin.Context) {
 		Phone:    req.Phone,
 		CodeType: req.CodeType,
 	}
-	cache.Save(sixNumber)
+	cache.Save(CodeCache{
+		Code:      sixNumber,
+		ErrVerify: 0,
+	})
 
 	// 发送成功
 	app.Response(ctx, &result.Ok)
@@ -99,15 +100,23 @@ func postVerify(ctx *gin.Context) {
 	}
 
 	// 获取缓存数据
-	ok, cacheValue := cache.GetValue()
-	if !ok {
+	codeCache := cache.GetValue()
+	if codeCache == nil {
 		app.Response(ctx, &result.NotFound)
 	}
 
-	// 比较验证码
-	if cacheValue.Code != req.Code {
+	// 如果验证码较验错误
+	if codeCache.Code != req.Code {
 		// 增加缓存引用记数
-		cache.AddVerifyTime()
+		codeCache.ErrVerify += 1
+
+		// 如果已经较验出错 5 次，移除现有验证码
+		if codeCache.ErrVerify == 5 {
+			cache.Del()
+		} else {
+			// 更新出错较验次数
+			cache.Save(*codeCache)
+		}
 
 		app.Response(ctx, &result.NotMatch)
 		return

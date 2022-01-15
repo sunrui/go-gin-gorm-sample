@@ -7,28 +7,183 @@
 package db
 
 import (
+	"encoding/json"
 	"fmt"
-	"github.com/go-redis/redis"
+	"github.com/garyburd/redigo/redis"
 	"medium-server-go/common/config"
+	"reflect"
+	"time"
 )
 
 // Redis 数据库访问对象
-var Redis *redis.Client
+type redisPool struct {
+	pool *redis.Pool
+}
+
+var Redis *redisPool
 
 // 初始化
 func init() {
 	redisConfig := config.Get().RedisConfig
 
-	// 数据库连接
-	Redis = redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%d", redisConfig.Host, redisConfig.Port),
-		Password: redisConfig.Password,
-		DB:       redisConfig.Database,
-	})
+	// 建立连接池
+	Redis = &redisPool{
+		pool: &redis.Pool{
+			MaxIdle:     5,
+			MaxActive:   100,
+			IdleTimeout: 1 * time.Hour,
+			Wait:        true,
+			Dial: func() (redis.Conn, error) {
+				address := fmt.Sprintf("%s:%d", redisConfig.Host, redisConfig.Port)
+				return redis.Dial("tcp", address,
+					redis.DialPassword(redisConfig.Password),
+					redis.DialDatabase(redisConfig.Database),
+					redis.DialConnectTimeout(10*time.Second),
+					redis.DialReadTimeout(10*time.Second),
+					redis.DialWriteTimeout(10*time.Second))
+			},
+		},
+	}
 
-	// 使用请求 flush 检测是否连接成功
-	err := Redis.FlushDB().Err()
+	// 尝试数据库连接
+	_, err := Redis.pool.Get().Do("PING")
 	if err != nil {
 		panic(err.Error())
 	}
+}
+
+// 设置对象
+func (redisPool *redisPool) Set(key string, value interface{}, second time.Duration) {
+	pool := redisPool.pool.Get()
+	defer func() {
+		_ = pool.Close()
+	}()
+
+	// 判断存储的是否为对象
+	if reflect.TypeOf(value).Kind() == reflect.Struct {
+		marshal, err := json.Marshal(value)
+		if err != nil {
+			panic(err.Error())
+		}
+
+		value = string(marshal)
+	}
+
+	_, err := pool.Do("SET", key, value, "EX", fmt.Sprintf("%d", second))
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
+// 获取字符串
+func (redisPool *redisPool) Get(key string) *string {
+	pool := redisPool.pool.Get()
+	defer func() {
+		_ = pool.Close()
+	}()
+
+	reply, err := pool.Do("GET", key)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	if reply == nil {
+		return nil
+	}
+
+	value := fmt.Sprintf("%s", reply)
+	return &value
+}
+
+// 获取对象
+func (redisPool *redisPool) GetJson(key string, dest interface{}) (ok bool) {
+	pool := redisPool.pool.Get()
+	defer func() {
+		_ = pool.Close()
+	}()
+
+	reply, err := pool.Do("GET", key)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	if reply == nil {
+		return false
+	}
+
+	// json 反序列化
+	err = json.Unmarshal(reply.([]uint8), dest)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return true
+}
+
+// 是否存在对象
+func (redisPool *redisPool) Exists(key string) bool {
+	pool := redisPool.pool.Get()
+	defer func() {
+		_ = pool.Close()
+	}()
+
+	ret, err := pool.Do("EXISTS", key)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return ret.(int64) == 1
+}
+
+// 删除对象
+func (redisPool *redisPool) Del(key string) {
+	pool := redisPool.pool.Get()
+	defer func() {
+		_ = pool.Close()
+	}()
+
+	_, err := pool.Do("DEL", key)
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
+// 设置 hash 对象
+func (redisPool *redisPool) HashSet(hash string, key string, value interface{}) {
+	pool := redisPool.pool.Get()
+	defer func() {
+		_ = pool.Close()
+	}()
+
+	ret, err := pool.Do("HSET", hash, key, value)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	fmt.Println(ret)
+}
+
+// 获取 hash 对象
+func (redisPool *redisPool) HashGet(hash string, key string, dest interface{}) (ok bool) {
+	pool := redisPool.pool.Get()
+	defer func() {
+		_ = pool.Close()
+	}()
+
+	reply, err := pool.Do("HGET", hash, key)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	if reply == nil {
+		return false
+	}
+
+	// json 反序列化
+	err = json.Unmarshal(reply.([]uint8), dest)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return true
 }
