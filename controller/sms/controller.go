@@ -28,16 +28,15 @@ func postCode(ctx *gin.Context) {
 	// 获取当天发送条数，判断是否超出最大条数限制
 	count := countByPhoneAndDate(req.Phone, getNowDate())
 	if count >= 5 {
-		app.Response(ctx, &result.RateLimit)
+		app.Response(ctx, result.RateLimit)
 		return
 	}
 
 	// 创建 6 位验证码
 	sixNumber := createSixNumber()
-	smsProvider := provider.Sms{}
 
 	// 调用服务发送验证码
-	channel, reqId, err := smsProvider.Send(req.Phone, req.CodeType, sixNumber)
+	channel, reqId, err := provider.Sms.Send(req.Phone, req.CodeType, sixNumber)
 
 	// 备注对象
 	type comment struct {
@@ -73,13 +72,13 @@ func postCode(ctx *gin.Context) {
 		Phone:    req.Phone,
 		CodeType: req.CodeType,
 	}
-	cache.Save(CodeCache{
+	cache.Save(codeCache{
 		Code:      sixNumber,
 		ErrVerify: 0,
 	})
 
 	// 发送成功
-	app.Response(ctx, &result.Ok)
+	app.Response(ctx, result.Ok)
 }
 
 // 较验验证码
@@ -101,16 +100,16 @@ func postVerify(ctx *gin.Context) {
 
 	// 获取缓存数据
 	if !cache.Exists() {
-		app.Response(ctx, &result.NotFound)
+		app.Response(ctx, result.NotFound)
 		return
 	}
 
 	// 较验验证码
 	if !cache.Verify(req.Code) {
-		app.Response(ctx, &result.NotMatch)
+		app.Response(ctx, result.NotMatch)
 		return
 	}
 
 	// 较验成功
-	app.Response(ctx, &result.Ok)
+	app.Response(ctx, result.Ok)
 }

@@ -33,48 +33,40 @@ type Config struct {
 	RedisConfig RedisConfig // Redis 配置对象
 }
 
-// 创建配置对象
-func createConfig(mysqlConfig MysqlConfig, redisConfig RedisConfig) Config {
-	return Config{
-		MysqlConfig: mysqlConfig,
-		RedisConfig: redisConfig,
-	}
-}
-
 var (
 	// 调试环境配置
-	debug = createConfig(
-		MysqlConfig{
+	debug = Config{
+		MysqlConfig: MysqlConfig{
 			Host:     "localhost",
 			Port:     3306,
 			Database: "medium",
 			User:     "root",
 			Password: "root",
 		},
-		RedisConfig{
+		RedisConfig: RedisConfig{
 			Host:     "localhost",
 			Port:     6379,
 			Password: "",
 			Database: 0,
 		},
-	)
+	}
 
 	// 正式环境配置
-	release = createConfig(
-		MysqlConfig{
+	release = Config{
+		MysqlConfig: MysqlConfig{
 			Host:     "localhost",
 			Port:     3306,
 			Database: "medium",
 			User:     "root",
 			Password: "root",
 		},
-		RedisConfig{
+		RedisConfig: RedisConfig{
 			Host:     "localhost",
 			Port:     6379,
 			Password: "",
 			Database: 0,
 		},
-	)
+	}
 )
 
 // 获取当前配置

@@ -13,7 +13,7 @@ import (
 )
 
 // 统一返回对象
-func Response(ctx *gin.Context, result *result.Result) {
+func Response(ctx *gin.Context, result result.Result) {
 	ctx.JSON(http.StatusOK, result)
 	ctx.Abort()
 }

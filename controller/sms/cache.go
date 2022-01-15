@@ -13,7 +13,7 @@ import (
 )
 
 // 缓存数据
-type CodeCache struct {
+type codeCache struct {
 	Code      string `json:"code"`      // 验证码
 	ErrVerify int    `json:"errVerify"` // 出错较验次数
 }
@@ -30,8 +30,8 @@ func (cache *Cache) getKey() string {
 }
 
 // 获取缓存的值
-func (cache *Cache) getValue() *CodeCache {
-	var codeCache CodeCache
+func (cache *Cache) getValue() *codeCache {
+	var codeCache codeCache
 
 	ok := db.Redis.GetJson(cache.getKey(), &codeCache)
 	if ok {
@@ -46,7 +46,7 @@ func (cache *Cache) Exists() bool {
 }
 
 // 设置新缓存验证码
-func (cache *Cache) Save(codeCache CodeCache) {
+func (cache *Cache) Save(codeCache codeCache) {
 	db.Redis.Set(cache.getKey(), codeCache, 15*60)
 }
 

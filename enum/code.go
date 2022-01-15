@@ -6,9 +6,32 @@
 
 package enum
 
+import "reflect"
+
 // 验证码类型
 type CodeType string
 
-const (
-	LOGIN CodeType = "LOGIN" // 登录
-)
+// 验证码定义
+type codeDef struct {
+	Login, ResetPassword CodeType
+}
+
+// 验证码转换
+func (codeDef codeDef) ValueOf(id string) (codeType CodeType, ok bool) {
+	vo := reflect.ValueOf(codeDef)
+	typeVo := vo.Type()
+
+	for i := 0; i < vo.NumField(); i++ {
+		if typeVo.Field(i).Name == id {
+			return vo.Field(i).Interface().(CodeType), true
+		}
+	}
+
+	return "", false
+}
+
+// 验证码实体
+var Code = codeDef{
+	Login:         "Login",
+	ResetPassword: "ResetPassword",
+}

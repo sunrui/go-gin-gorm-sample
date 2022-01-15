@@ -17,22 +17,22 @@ type Result struct {
 }
 
 // 设置结果对象参数对
-func (code *Result) WithKeyPair(key string, value string) *Result {
+func (result Result) WithKeyPair(key string, value string) Result {
 	dataMap := make(map[string]string)
 	dataMap[key] = value
-	code.Data = dataMap
-	return code
+	result.Data = dataMap
+	return result
 }
 
 // 设置结果对象数据
-func (code *Result) WithData(data interface{}) *Result {
-	code.Data = data
-	return code
+func (result Result) WithData(data interface{}) Result {
+	result.Data = data
+	return result
 }
 
 // 重写返回结果对象，使用 json 反序列化
-func (code *Result) String() string {
-	marshal, _ := json.Marshal(code)
+func (result Result) String() string {
+	marshal, _ := json.Marshal(result)
 	return string(marshal)
 }
 

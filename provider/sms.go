@@ -11,11 +11,11 @@ import (
 	"medium-server-go/enum"
 )
 
-// 短信对象
-type Sms struct{}
+// 短信定义
+type smsDef struct{}
 
 // 短信发送
-func (sms *Sms) Send(phone string, codeType enum.CodeType, sixNumber string) (channel string, reqId string, err error) {
+func (_ *smsDef) Send(phone string, codeType enum.CodeType, sixNumber string) (channel string, reqId string, err error) {
 	echo := fmt.Sprintf("Send - %s, %s, %s", phone, codeType, sixNumber)
 	fmt.Println(echo)
 
@@ -24,3 +24,6 @@ func (sms *Sms) Send(phone string, codeType enum.CodeType, sixNumber string) (ch
 	err = nil
 	return
 }
+
+// 短信实体
+var Sms = smsDef{}
