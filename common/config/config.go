@@ -11,7 +11,7 @@ import (
 )
 
 // Mysql 配置对象
-type MysqlConfig struct {
+type mysql struct {
 	Host     string // 主机
 	Port     int    // 端口
 	Database string // 数据库
@@ -20,7 +20,7 @@ type MysqlConfig struct {
 }
 
 // Redis 配置对象
-type RedisConfig struct {
+type redis struct {
 	Host     string // 主机
 	Port     int    // 端口
 	Password string // 密码
@@ -28,22 +28,22 @@ type RedisConfig struct {
 }
 
 // 配置对象
-type Config struct {
-	MysqlConfig MysqlConfig // Mysql 配置对象
-	RedisConfig RedisConfig // Redis 配置对象
+type config struct {
+	Mysql mysql // Mysql 配置对象
+	Redis redis // Redis 配置对象
 }
 
 var (
 	// 调试环境配置
-	debug = Config{
-		MysqlConfig: MysqlConfig{
+	debug = config{
+		Mysql: mysql{
 			Host:     "localhost",
 			Port:     3306,
 			Database: "medium",
 			User:     "root",
 			Password: "root",
 		},
-		RedisConfig: RedisConfig{
+		Redis: redis{
 			Host:     "localhost",
 			Port:     6379,
 			Password: "",
@@ -52,15 +52,15 @@ var (
 	}
 
 	// 正式环境配置
-	release = Config{
-		MysqlConfig: MysqlConfig{
+	release = config{
+		Mysql: mysql{
 			Host:     "localhost",
 			Port:     3306,
 			Database: "medium",
 			User:     "root",
 			Password: "root",
 		},
-		RedisConfig: RedisConfig{
+		Redis: redis{
 			Host:     "localhost",
 			Port:     6379,
 			Password: "",
@@ -70,7 +70,7 @@ var (
 )
 
 // 获取当前配置
-func Get() Config {
+func Get() config {
 	if IsDebugMode() {
 		return debug
 	} else {

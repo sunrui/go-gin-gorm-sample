@@ -72,7 +72,7 @@ func postCode(ctx *gin.Context) {
 		Phone:    req.Phone,
 		CodeType: req.CodeType,
 	}
-	cache.Save(codeCache{
+	cache.save(codeCache{
 		Code:      sixNumber,
 		ErrVerify: 0,
 	})

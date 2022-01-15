@@ -21,7 +21,7 @@ var Mysql *gorm.DB
 
 // 初始化
 func init() {
-	mysqlConfig := config.Get().MysqlConfig
+	mysqlConfig := config.Get().Mysql
 	var err error
 
 	// 数据库连接

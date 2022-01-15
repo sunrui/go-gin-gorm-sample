@@ -46,7 +46,7 @@ func (cache *Cache) Exists() bool {
 }
 
 // 设置新缓存验证码
-func (cache *Cache) Save(codeCache codeCache) {
+func (cache *Cache) save(codeCache codeCache) {
 	db.Redis.Set(cache.getKey(), codeCache, 15*60)
 }
 
@@ -58,22 +58,22 @@ func (cache *Cache) Del() {
 // 较验验证码
 func (cache *Cache) Verify(code string) bool {
 	// 获取缓存数据
-	codeCache := cache.getValue()
-	if codeCache == nil {
+	value := cache.getValue()
+	if value == nil {
 		return false
 	}
 
 	// 如果验证码较验错误
-	if codeCache.Code != code {
+	if value.Code != code {
 		// 增加缓存引用记数
-		codeCache.ErrVerify += 1
+		value.ErrVerify += 1
 
 		// 如果已经较验出错 5 次，移除现有验证码
-		if codeCache.ErrVerify == 5 {
+		if value.ErrVerify == 5 {
 			cache.Del()
 		} else {
 			// 更新出错较验次数
-			cache.Save(*codeCache)
+			cache.save(*value)
 		}
 
 		return false
