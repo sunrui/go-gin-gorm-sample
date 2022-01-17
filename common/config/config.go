@@ -28,14 +28,14 @@ type redis struct {
 }
 
 // 配置对象
-type config struct {
+type Config struct {
 	Mysql mysql // Mysql 配置对象
 	Redis redis // Redis 配置对象
 }
 
 var (
 	// 调试环境配置
-	debug = config{
+	debug = Config{
 		Mysql: mysql{
 			Host:     "localhost",
 			Port:     3306,
@@ -52,7 +52,7 @@ var (
 	}
 
 	// 正式环境配置
-	release = config{
+	release = Config{
 		Mysql: mysql{
 			Host:     "localhost",
 			Port:     3306,
@@ -70,7 +70,7 @@ var (
 )
 
 // 获取当前配置
-func Get() config {
+func Get() Config {
 	if IsDebugMode() {
 		return debug
 	} else {

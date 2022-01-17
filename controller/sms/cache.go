@@ -41,6 +41,7 @@ func (cache *Cache) getValue() *codeCache {
 	return nil
 }
 
+// 获取缓存是否存在
 func (cache *Cache) Exists() bool {
 	return db.Redis.Exists(cache.getKey())
 }
