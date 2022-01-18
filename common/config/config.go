@@ -31,7 +31,7 @@ type redis struct {
 type Config struct {
 	Mysql     mysql  // Mysql 配置对象
 	Redis     redis  // Redis 配置对象
-	JwtSecret string // Jwt 密钥
+	JwtSecret []byte // Jwt 密钥
 }
 
 var (
@@ -50,7 +50,7 @@ var (
 			Password: "",
 			Database: 0,
 		},
-		JwtSecret: "39184F28-F1D8-46CE-A3EB-7331F0D299B0",
+		JwtSecret: []byte("39184F28-F1D8-46CE-A3EB-7331F0D299B0"),
 	}
 
 	// 正式环境配置
@@ -68,7 +68,7 @@ var (
 			Password: "",
 			Database: 0,
 		},
-		JwtSecret: "39184F28-F1D8-46CE-A3EB-7331F0D299B0",
+		JwtSecret: []byte("39184F28-F1D8-46CE-A3EB-7331F0D299B0"),
 	}
 )
 
