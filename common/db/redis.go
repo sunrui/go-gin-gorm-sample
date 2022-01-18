@@ -25,7 +25,7 @@ var Redis *redisPool
 
 // 初始化
 func init() {
-	redisConfig := config.Get().Redis
+	redisConf := config.Get().Redis
 
 	// 建立连接池
 	Redis = &redisPool{
@@ -35,10 +35,10 @@ func init() {
 			IdleTimeout: 1 * time.Hour,
 			Wait:        true,
 			Dial: func() (redis.Conn, error) {
-				address := fmt.Sprintf("%s:%d", redisConfig.Host, redisConfig.Port)
+				address := fmt.Sprintf("%s:%d", redisConf.Host, redisConf.Port)
 				return redis.Dial("tcp", address,
-					redis.DialPassword(redisConfig.Password),
-					redis.DialDatabase(redisConfig.Database),
+					redis.DialPassword(redisConf.Password),
+					redis.DialDatabase(redisConf.Database),
 					redis.DialConnectTimeout(10*time.Second),
 					redis.DialReadTimeout(10*time.Second),
 					redis.DialWriteTimeout(10*time.Second))
@@ -150,6 +150,16 @@ func (redisPool *redisPool) HashSet(hash string, key string, value interface{}) 
 	defer func() {
 		_ = pool.Close()
 	}()
+
+	// 判断存储的是否为对象
+	if reflect.TypeOf(value).Kind() == reflect.Struct {
+		marshal, err := json.Marshal(value)
+		if err != nil {
+			panic(err.Error())
+		}
+
+		value = string(marshal)
+	}
 
 	ret, err := pool.Do("HSET", hash, key, value)
 	if err != nil {

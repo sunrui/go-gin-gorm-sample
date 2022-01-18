@@ -21,16 +21,16 @@ var Mysql *gorm.DB
 
 // 初始化
 func init() {
-	mysqlConfig := config.Get().Mysql
+	mysqlConf := config.Get().Mysql
 	var err error
 
 	// 数据库连接
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
-		mysqlConfig.User,
-		mysqlConfig.Password,
-		mysqlConfig.Host,
-		mysqlConfig.Port,
-		mysqlConfig.Database)
+		mysqlConf.User,
+		mysqlConf.Password,
+		mysqlConf.Host,
+		mysqlConf.Port,
+		mysqlConf.Database)
 	Mysql, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err.Error())
