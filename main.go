@@ -9,7 +9,12 @@ import (
 	"medium-server-go/common/app"
 	"medium-server-go/controller/auth"
 	"medium-server-go/controller/sms"
+	"medium-server-go/provider"
 )
+
+func init() {
+	provider.Test()
+}
 
 func main() {
 	// 创建服务

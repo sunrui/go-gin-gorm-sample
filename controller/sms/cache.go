@@ -33,8 +33,8 @@ func (cache *Cache) getKey() string {
 func (cache *Cache) getValue() *codeCache {
 	var codeCache codeCache
 
-	ok := db.Redis.GetJson(cache.getKey(), &codeCache)
-	if ok {
+	err := db.Redis.GetJson(cache.getKey(), &codeCache)
+	if err != nil {
 		return &codeCache
 	}
 

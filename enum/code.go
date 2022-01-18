@@ -6,7 +6,10 @@
 
 package enum
 
-import "reflect"
+import (
+	"errors"
+	"reflect"
+)
 
 // 验证码类型
 type CodeType string
@@ -17,17 +20,17 @@ type codeDef struct {
 }
 
 // 验证码转换
-func (codeDef codeDef) ValueOf(id string) (codeType CodeType, ok bool) {
+func (codeDef codeDef) ValueOf(code string) (codeType CodeType, err error) {
 	vo := reflect.ValueOf(codeDef)
 	typeVo := vo.Type()
 
 	for i := 0; i < vo.NumField(); i++ {
-		if typeVo.Field(i).Name == id {
-			return vo.Field(i).Interface().(CodeType), true
+		if typeVo.Field(i).Name == code {
+			return vo.Field(i).Interface().(CodeType), nil
 		}
 	}
 
-	return "", false
+	return "", errors.New("code not found")
 }
 
 // 验证码实体

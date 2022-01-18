@@ -19,9 +19,9 @@ func postCode(ctx *gin.Context) {
 	var req postCodeReq
 
 	// 较验参数
-	data, ok := app.ValidateParameter(ctx, &req)
-	if !ok {
-		app.Response(ctx, result.ParameterError.WithData(data))
+	errData, err := app.ValidateParameter(ctx, &req)
+	if err != nil {
+		app.Response(ctx, result.ParameterError.WithData(errData))
 		return
 	}
 
@@ -86,9 +86,9 @@ func postVerify(ctx *gin.Context) {
 	var req postVerifyReq
 
 	// 较验参数
-	data, ok := app.ValidateParameter(ctx, &req)
-	if !ok {
-		app.Response(ctx, result.ParameterError.WithData(data))
+	errData, err := app.ValidateParameter(ctx, &req)
+	if err != nil {
+		app.Response(ctx, result.ParameterError.WithData(errData))
 		return
 	}
 

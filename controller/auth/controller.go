@@ -19,9 +19,9 @@ func postLoginByPhone(ctx *gin.Context) {
 	var req loginByPhoneReq
 
 	// 较验参数
-	data, ok := app.ValidateParameter(ctx, &req)
-	if !ok {
-		app.Response(ctx, result.ParameterError.WithData(data))
+	errData, err := app.ValidateParameter(ctx, &req)
+	if err != nil {
+		app.Response(ctx, result.ParameterError.WithData(errData))
 		return
 	}
 
@@ -57,9 +57,9 @@ func postLoginByWechat(ctx *gin.Context) {
 	var req loginByPhoneReq
 
 	// 较验参数
-	data, ok := app.ValidateParameter(ctx, &req)
-	if !ok {
-		app.Response(ctx, result.ParameterError.WithData(data))
+	errData, err := app.ValidateParameter(ctx, &req)
+	if err != nil {
+		app.Response(ctx, result.ParameterError.WithData(errData))
 		return
 	}
 

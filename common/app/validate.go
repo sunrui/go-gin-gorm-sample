@@ -16,9 +16,8 @@ import (
 )
 
 // 请求参数过滤
-func ValidateParameter(ctx *gin.Context, req interface{}) (errData interface{}, ok bool) {
+func ValidateParameter(ctx *gin.Context, req interface{}) (errData map[string]interface{}, err error) {
 	var validationErrors validator.ValidationErrors
-	var err error
 
 	// 默认以 json 方式解析
 	if err = ctx.MustBindWith(&req, binding.JSON); err != nil {
@@ -30,7 +29,7 @@ func ValidateParameter(ctx *gin.Context, req interface{}) (errData interface{}, 
 		goto ERROR
 	}
 
-	return nil, true
+	return nil, err
 
 ERROR:
 	// 参数错误对象
@@ -43,10 +42,10 @@ ERROR:
 
 	// 解析内容出错
 	if !errors.As(err, &validationErrors) {
-		dataMap := make(map[string]interface{})
-		dataMap["error"] = fmt.Sprintf("%s", err)
+		errData = make(map[string]interface{})
+		errData["error"] = fmt.Sprintf("%s", err)
 
-		return dataMap, false
+		return errData, err
 	}
 
 	// 遍历解析参数
@@ -62,8 +61,8 @@ ERROR:
 		})
 	}
 
-	dataMap := make(map[string]interface{})
-	dataMap["errors"] = paramErrors
+	errData = make(map[string]interface{})
+	errData["errors"] = paramErrors
 
-	return dataMap, false
+	return errData, err
 }

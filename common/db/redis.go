@@ -8,6 +8,7 @@ package db
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"medium-server-go/common/config"
@@ -96,7 +97,7 @@ func (redisPool *redisPool) Get(key string) *string {
 }
 
 // 获取对象
-func (redisPool *redisPool) GetJson(key string, dest interface{}) (ok bool) {
+func (redisPool *redisPool) GetJson(key string, dest interface{}) (err error) {
 	pool := redisPool.pool.Get()
 	defer func() {
 		_ = pool.Close()
@@ -104,20 +105,15 @@ func (redisPool *redisPool) GetJson(key string, dest interface{}) (ok bool) {
 
 	reply, err := pool.Do("GET", key)
 	if err != nil {
-		panic(err.Error())
+		return err
 	}
 
 	if reply == nil {
-		return false
+		return errors.New("key not exist")
 	}
 
 	// json 反序列化
-	err = json.Unmarshal(reply.([]uint8), dest)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	return true
+	return json.Unmarshal(reply.([]uint8), dest)
 }
 
 // 是否存在对象
@@ -184,7 +180,7 @@ func (redisPool *redisPool) HashGet(hash string, key string) *string {
 }
 
 // 获取 hash 对象
-func (redisPool *redisPool) HashGetJson(hash string, key string, dest interface{}) (ok bool) {
+func (redisPool *redisPool) HashGetJson(hash string, key string, dest interface{}) (err error) {
 	pool := redisPool.pool.Get()
 	defer func() {
 		_ = pool.Close()
@@ -192,18 +188,13 @@ func (redisPool *redisPool) HashGetJson(hash string, key string, dest interface{
 
 	reply, err := pool.Do("HGET", hash, key)
 	if err != nil {
-		panic(err.Error())
+		return err
 	}
 
 	if reply == nil {
-		return false
+		return errors.New("key not exist")
 	}
 
 	// json 反序列化
-	err = json.Unmarshal(reply.([]uint8), dest)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	return true
+	return json.Unmarshal(reply.([]uint8), dest)
 }
