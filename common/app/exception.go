@@ -7,9 +7,13 @@
 package app
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"medium-server-go/common/config"
 	"medium-server-go/common/result"
+	"os"
+	"runtime"
+	"strings"
 )
 
 // 异常捕获对象
@@ -21,7 +25,6 @@ func exceptionHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 			defer func() {
 				if err := recover(); err != nil {
 					dataMap := make(map[string]interface{})
-
 					// 判断是否抛出了 result 对象
 					res, ok := err.(*result.Result)
 					if ok {
@@ -29,6 +32,40 @@ func exceptionHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 					} else {
 						dataMap["error"] = err
 					}
+
+					mapData := make(map[string]interface{})
+					mapData["description"] = err
+
+					type Stack struct {
+						Function string
+						File     string
+					}
+
+					var stacks []Stack
+
+					maxDeep := 6
+					pc := make([]uintptr, maxDeep)
+					runtime.Callers(4, pc)
+					frames := runtime.CallersFrames(pc)
+
+					pwd, _ := os.Getwd()
+					pwd = strings.Replace(pwd, "\\", "/", -1)
+					goPath := os.Getenv("GOPATH")
+					goPath = strings.Replace(goPath, "\\", "/", -1)
+
+					for frame, ok := frames.Next(); ok; frame, ok = frames.Next() {
+						file := strings.Replace(frame.File, pwd, "", -1)
+						file = strings.Replace(file, goPath, "", -1)
+						file = fmt.Sprintf("%s:%d", file, frame.Line)
+						function := frame.Function[strings.Index(frame.Function, "/"):]
+
+						stacks = append(stacks, Stack{
+							Function: function,
+							File:     file,
+						})
+					}
+
+					dataMap["stacks"] = stacks
 
 					Response(ctx, result.InternalError.WithData(dataMap))
 				}
