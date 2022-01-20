@@ -9,6 +9,7 @@ import (
 	"medium-server-go/common/app"
 	"medium-server-go/controller/auth"
 	"medium-server-go/controller/sms"
+	"medium-server-go/controller/user"
 )
 
 func main() {
@@ -19,6 +20,7 @@ func main() {
 	for _, router := range []app.Router{
 		sms.GetRouter(),
 		auth.GetRouter(),
+		user.GetRouter(),
 	} {
 		server.RegisterRouter(router)
 	}

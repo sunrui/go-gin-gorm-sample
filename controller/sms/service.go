@@ -44,7 +44,7 @@ func saveCode(code *Code) {
 func countByPhoneAndDate(phone string, date string) int64 {
 	var count int64
 
-	query := db.Mysql.Model(&Code{}).Where("phone = ? AND DATE(created_at) = ?", phone, date).Count(&count)
+	query := db.Mysql.Find(&Code{}, "phone = ? AND DATE(created_at) = ?", phone, date).Count(&count)
 	if query.Error != nil {
 		panic(query.Error.Error())
 	}
