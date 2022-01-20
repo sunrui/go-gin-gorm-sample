@@ -15,7 +15,7 @@ import (
 type smsDef struct{}
 
 // 短信发送
-func (_ *smsDef) Send(phone string, codeType enum.CodeType, sixNumber string) (channel string, reqId string, err error) {
+func (*smsDef) Send(phone string, codeType enum.CodeType, sixNumber string) (channel string, reqId string, err error) {
 	echo := fmt.Sprintf("Send - %s, %s, %s", phone, codeType, sixNumber)
 	fmt.Println(echo)
 

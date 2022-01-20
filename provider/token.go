@@ -17,20 +17,20 @@ type TokenEntity struct {
 }
 
 // Jwt 令牌对象
-type TokenJwtEntity struct {
+type tokenJwtEntity struct {
 	jwt.StandardClaims
 	TokenEntity
 }
 
 // Jwt 对象定义
-type TokenDef struct{}
+type tokenDef struct{}
 
 // Jwt 密钥
 var jwtSecret = config.Get().JwtSecret
 
 // 生成 Jwt 字符串
-func (tokenDef *TokenDef) Encode(tokenEntity TokenEntity) (string, error) {
-	claims := TokenJwtEntity{
+func (*tokenDef) Encode(tokenEntity TokenEntity) (token string, err error) {
+	claims := tokenJwtEntity{
 		jwt.StandardClaims{},
 		tokenEntity,
 	}
@@ -40,18 +40,18 @@ func (tokenDef *TokenDef) Encode(tokenEntity TokenEntity) (string, error) {
 }
 
 // 验证 Jwt 字符串
-func (tokenDef *TokenDef) Decode(token string) (*TokenJwtEntity, error) {
-	tokenClaims, err := jwt.ParseWithClaims(token, &TokenJwtEntity{}, func(token *jwt.Token) (interface{}, error) {
+func (*tokenDef) Decode(token string) (tokenEntity *TokenEntity, err error) {
+	tokenClaims, err := jwt.ParseWithClaims(token, &tokenJwtEntity{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})
 
 	if tokenClaims != nil {
-		if claims, ok := tokenClaims.Claims.(*TokenJwtEntity); ok && tokenClaims.Valid {
-			return claims, nil
+		if claims, ok := tokenClaims.Claims.(*tokenJwtEntity); ok && tokenClaims.Valid {
+			return &claims.TokenEntity, nil
 		}
 	}
 
 	return nil, err
 }
 
-var Token = &TokenDef{}
+var Token = &tokenDef{}

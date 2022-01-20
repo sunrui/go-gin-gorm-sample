@@ -34,7 +34,7 @@ func (cache *Cache) getValue() *codeCache {
 	var codeCache codeCache
 
 	err := db.Redis.GetJson(cache.getKey(), &codeCache)
-	if err != nil {
+	if err == nil {
 		return &codeCache
 	}
 

@@ -23,6 +23,14 @@ func GetRouter() app.Router {
 				HttpMethod:   "POST",
 				RelativePath: "/login/wechat",
 				HandlerFunc:  postLoginByWechat,
+			}, {
+				HttpMethod:   "GET",
+				RelativePath: "/token",
+				HandlerFunc:  getToken,
+			}, {
+				HttpMethod:   "POST",
+				RelativePath: "/logout",
+				HandlerFunc:  postLogout,
 			},
 		},
 	}

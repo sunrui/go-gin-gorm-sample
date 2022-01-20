@@ -30,11 +30,11 @@ func (codeDef codeDef) ValueOf(code string) (codeType CodeType, err error) {
 		}
 	}
 
-	return "", errors.New("code not found")
+	return "", errors.New("codeType not found")
 }
 
 // 验证码实体
 var Code = codeDef{
-	Login:         "Login",
-	ResetPassword: "ResetPassword",
+	Login:         "LOGIN",
+	ResetPassword: "RESET_PASSWORD",
 }

@@ -11,6 +11,7 @@ import (
 	"medium-server-go/common/result"
 	"medium-server-go/controller/sms"
 	"medium-server-go/enum"
+	"medium-server-go/provider"
 	"net/http"
 )
 
@@ -46,6 +47,16 @@ func postLoginByPhone(ctx *gin.Context) {
 	// 移除验证码
 	smsCache.Del()
 
+	token, err := provider.Token.Encode(provider.TokenEntity{
+		UserId: "userId",
+	})
+	if err != nil {
+		return
+	}
+
+	ctx.SetCookie("token", token, 30*24*60*60,
+		"/", "localhost", false, true)
+
 	ctx.JSON(http.StatusOK,
 		result.Ok.WithData(loginByPhoneRes{
 			UserId: req.Phone,
@@ -62,5 +73,35 @@ func postLoginByWechat(ctx *gin.Context) {
 		app.Response(ctx, result.ParameterError.WithData(errData))
 		return
 	}
+}
 
+// 获取令牌
+func getToken(ctx *gin.Context) {
+	token, err := ctx.Cookie("token")
+	if err != nil {
+		app.Response(ctx, result.NotFound)
+		return
+	}
+
+	// 获取用户令牌
+	tokenEntity, err := provider.Token.Decode(token)
+	if err != nil {
+		panic(err)
+		return
+	}
+
+	app.Response(ctx, result.Ok.WithData(tokenEntity))
+}
+
+// 登出
+func postLogout(ctx *gin.Context) {
+	_, err := ctx.Cookie("token")
+	if err != nil {
+		app.Response(ctx, result.NotFound)
+		return
+	}
+
+	// 设置令牌过期
+	ctx.SetCookie("token", "", -1, "/", "localhost", false, true)
+	app.Response(ctx, result.Ok)
 }
