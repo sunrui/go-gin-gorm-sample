@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"medium-server-go/common/config"
+	"medium-server-go/framework/config"
 	"strings"
 	"time"
 )
@@ -21,7 +21,7 @@ var Mysql *gorm.DB
 
 // 初始化
 func init() {
-	mysqlConf := config.Get().Mysql
+	mysqlConf := config.Conf.Config().Mysql
 	var err error
 
 	// 数据库连接

@@ -5,9 +5,7 @@
  */
 package auth
 
-import (
-	"medium-server-go/common/app"
-)
+import "medium-server-go/framework/app"
 
 // 获取授权路由对象
 func GetRouter() app.Router {

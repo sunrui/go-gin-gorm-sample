@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2022 honeysense All rights reserved.
  * Author: sunrui
- * Date: 2022/01/20 23:16:20
+ * Date: 2022/01/21 00:23:21
  */
 
 package user
 
-import "medium-server-go/common/db"
+import "medium-server-go/framework/db"
 
 type User struct {
 	db.Model        // 通用参数

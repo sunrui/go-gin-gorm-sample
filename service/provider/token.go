@@ -8,7 +8,7 @@ package provider
 
 import (
 	"github.com/golang-jwt/jwt"
-	"medium-server-go/common/config"
+	"medium-server-go/framework/config"
 )
 
 // 令牌对象
@@ -25,8 +25,8 @@ type tokenJwtEntity struct {
 // Jwt 对象定义
 type tokenDef struct{}
 
-// Jwt 密钥
-var jwtSecret = config.Get().JwtSecret
+// jwt 密钥
+var jwtSecret = config.Conf.Config().JwtSecret
 
 // 生成 Jwt 字符串
 func (*tokenDef) Encode(tokenEntity TokenEntity) (token string, err error) {

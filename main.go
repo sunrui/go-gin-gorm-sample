@@ -6,10 +6,10 @@
 package main
 
 import (
-	"medium-server-go/common/app"
-	"medium-server-go/controller/auth"
-	"medium-server-go/controller/sms"
-	"medium-server-go/controller/user"
+	"medium-server-go/api-public/auth"
+	"medium-server-go/api-public/sms"
+	"medium-server-go/api-public/user"
+	"medium-server-go/framework/app"
 )
 
 func main() {

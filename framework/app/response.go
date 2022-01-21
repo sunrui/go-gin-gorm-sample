@@ -8,7 +8,7 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-	"medium-server-go/common/result"
+	"medium-server-go/framework/result"
 	"net/http"
 )
 

@@ -8,7 +8,7 @@ package provider
 
 import (
 	"fmt"
-	"medium-server-go/enum"
+	"medium-server-go/service/enum"
 )
 
 // 短信定义

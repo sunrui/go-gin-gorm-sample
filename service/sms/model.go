@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2022 honeysense All rights reserved.
  * Author: sunrui
- * Date: 2022/01/06 20:30:06
+ * Date: 2022/01/16 05:44:16
  */
 
 package sms
 
 import (
-	"medium-server-go/common/db"
-	"medium-server-go/enum"
+	"medium-server-go/framework/db"
+	"medium-server-go/service/enum"
 )
 
 // 验证码对象

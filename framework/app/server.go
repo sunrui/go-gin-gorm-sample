@@ -7,8 +7,8 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-	"medium-server-go/common/config"
-	"medium-server-go/common/result"
+	"medium-server-go/framework/config"
+	"medium-server-go/framework/result"
 	"net/http"
 	"strconv"
 	"time"
@@ -22,7 +22,7 @@ type Server struct {
 // 初始化
 func init() {
 	// 如果非调式环境注册 release 模式
-	if !config.IsDebugMode() {
+	if !config.Conf.IsDebugMode() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 }

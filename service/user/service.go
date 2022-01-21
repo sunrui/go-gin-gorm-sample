@@ -1,14 +1,12 @@
 /*
  * Copyright (c) 2022 honeysense All rights reserved.
  * Author: sunrui
- * Date: 2022/01/07 01:41:07
+ * Date: 2022/01/21 00:45:21
  */
 
 package user
 
-import (
-	"medium-server-go/common/db"
-)
+import "medium-server-go/framework/db"
 
 // 初始化
 func init() {

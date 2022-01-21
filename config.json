@@ -1,0 +1,35 @@
+{
+  "Environment": "Debug",
+  "Debug": {
+    "Mysql": {
+      "Host": "localhost",
+      "Port": 3306,
+      "Database": "medium",
+      "User": "root",
+      "Password": "root"
+    },
+    "Redis": {
+      "Host": "localhost",
+      "Port": 6379,
+      "Password": "",
+      "Database": 0
+    },
+    "JwtSecret": "MzkxODRGMjgtRjFEOC00NkNFLUEzRUItNzMzMUYwRDI5OUIw"
+  },
+  "Release": {
+    "Mysql": {
+      "Host": "localhost",
+      "Port": 3306,
+      "Database": "medium",
+      "User": "root",
+      "Password": "root"
+    },
+    "Redis": {
+      "Host": "localhost",
+      "Port": 6379,
+      "Password": "",
+      "Database": 0
+    },
+    "JwtSecret": "MzkxODRGMjgtRjFEOC00NkNFLUEzRUItNzMzMUYwRDI5OUIw"
+  }
+}

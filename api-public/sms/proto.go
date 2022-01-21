@@ -6,9 +6,7 @@
 
 package sms
 
-import (
-	"medium-server-go/enum"
-)
+import "medium-server-go/service/enum"
 
 // 发送验证码请求
 type postCodeReq struct {

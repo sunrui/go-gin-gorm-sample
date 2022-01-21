@@ -9,8 +9,8 @@ package app
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"medium-server-go/common/config"
-	"medium-server-go/common/result"
+	"medium-server-go/framework/config"
+	"medium-server-go/framework/result"
 	"os"
 	"runtime"
 	"strings"
@@ -20,11 +20,12 @@ import (
 func exceptionHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// 为了更好的调试，在开发环境中输出系统错误。
-		if !config.IsDebugMode() {
+		if !config.Conf.IsDebugMode() {
 			// 捕获对象，全部抛出可以使用 panic 方法。
 			defer func() {
 				if err := recover(); err != nil {
 					dataMap := make(map[string]interface{})
+
 					// 判断是否抛出了 result 对象
 					res, ok := err.(*result.Result)
 					if ok {
@@ -36,6 +37,7 @@ func exceptionHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 					mapData := make(map[string]interface{})
 					mapData["description"] = err
 
+					// 栈堆对象
 					type Stack struct {
 						Function string
 						File     string
@@ -43,17 +45,22 @@ func exceptionHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 
 					var stacks []Stack
 
+					// 最大函数位深 5 层
 					maxDeep := 6
 					pc := make([]uintptr, maxDeep)
 					runtime.Callers(4, pc)
 					frames := runtime.CallersFrames(pc)
 
+					// 当前项目目录
 					pwd, _ := os.Getwd()
 					pwd = strings.Replace(pwd, "\\", "/", -1)
+
+					// 当前 go 目录
 					goPath := os.Getenv("GOPATH")
 					goPath = strings.Replace(goPath, "\\", "/", -1)
 
 					for frame, ok := frames.Next(); ok; frame, ok = frames.Next() {
+						// 去掉项目目录
 						file := strings.Replace(frame.File, pwd, "", -1)
 						file = strings.Replace(file, goPath, "", -1)
 						file = fmt.Sprintf("%s:%d", file, frame.Line)

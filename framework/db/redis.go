@@ -11,7 +11,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
-	"medium-server-go/common/config"
+	"medium-server-go/framework/config"
 	"reflect"
 	"time"
 )
@@ -25,7 +25,7 @@ var Redis *redisPool
 
 // 初始化
 func init() {
-	redisConf := config.Get().Redis
+	redisConf := config.Conf.Config().Redis
 
 	// 建立连接池
 	Redis = &redisPool{

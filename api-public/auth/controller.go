@@ -7,12 +7,12 @@ package auth
 
 import (
 	"github.com/gin-gonic/gin"
-	"medium-server-go/common/app"
-	"medium-server-go/common/result"
-	"medium-server-go/controller/sms"
-	"medium-server-go/controller/user"
-	"medium-server-go/enum"
-	"medium-server-go/provider"
+	"medium-server-go/framework/app"
+	"medium-server-go/framework/result"
+	"medium-server-go/service/enum"
+	"medium-server-go/service/provider"
+	"medium-server-go/service/sms"
+	"medium-server-go/service/user"
 	"net/http"
 )
 

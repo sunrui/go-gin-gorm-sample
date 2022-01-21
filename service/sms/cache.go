@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2022 honeysense All rights reserved.
  * Author: sunrui
- * Date: 2022/01/13 01:21:13
+ * Date: 2022/01/20 21:16:20
  */
 
 package sms
 
 import (
 	"fmt"
-	"medium-server-go/common/db"
-	"medium-server-go/enum"
+	"medium-server-go/framework/db"
+	"medium-server-go/service/enum"
 )
 
 // 缓存数据
-type codeCache struct {
+type CodeCache struct {
 	Code      string `json:"code"`      // 验证码
 	ErrVerify int    `json:"errVerify"` // 出错较验次数
 }
@@ -30,8 +30,8 @@ func (cache *Cache) getKey() string {
 }
 
 // 获取缓存的值
-func (cache *Cache) getValue() *codeCache {
-	var codeCache codeCache
+func (cache *Cache) getValue() *CodeCache {
+	var codeCache CodeCache
 
 	err := db.Redis.GetJson(cache.getKey(), &codeCache)
 	if err == nil {
@@ -47,7 +47,7 @@ func (cache *Cache) Exists() bool {
 }
 
 // 设置新缓存验证码
-func (cache *Cache) save(codeCache codeCache) {
+func (cache *Cache) Save(codeCache CodeCache) {
 	db.Redis.Set(cache.getKey(), codeCache, 15*60)
 }
 
@@ -74,7 +74,7 @@ func (cache *Cache) Verify(code string) bool {
 			cache.Del()
 		} else {
 			// 更新出错较验次数
-			cache.save(*value)
+			cache.Save(*value)
 		}
 
 		return false
