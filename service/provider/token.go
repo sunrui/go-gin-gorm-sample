@@ -30,6 +30,7 @@ type tokenDef struct{}
 // jwt 密钥
 var jwtSecret = config.Current.Config().JwtSecret
 
+// 令牌 key 名称
 const tokenKey = "token"
 
 // 生成 Jwt 字符串
@@ -94,6 +95,7 @@ func (*tokenDef) GetTokenEntity(ctx *gin.Context) (tokenEntity *TokenEntity, err
 
 	token = getHeaderToken()
 	if token == "" {
+		// 从 cookie 中取出 token
 		token, err = ctx.Cookie(tokenKey)
 		if err != nil {
 			return nil, err
@@ -101,6 +103,11 @@ func (*tokenDef) GetTokenEntity(ctx *gin.Context) (tokenEntity *TokenEntity, err
 	}
 
 	return decode(token)
+}
+
+// 移除令牌
+func (*tokenDef) RemoveToken(ctx *gin.Context) {
+	ctx.SetCookie("token", "", -1, "/", "localhost", false, true)
 }
 
 var Token = &tokenDef{}

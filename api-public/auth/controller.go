@@ -57,7 +57,9 @@ func postLoginByPhone(ctx *gin.Context) {
 	userOne := user.FindByPhone(req.Phone)
 	if userOne == nil {
 		userOne = &user.User{
-			Phone: req.Phone,
+			Phone:     req.Phone,
+			Ip:        ctx.ClientIP(),
+			UserAgent: ctx.Request.UserAgent(),
 		}
 
 		// 创建新的用户
@@ -104,7 +106,7 @@ func postLogout(ctx *gin.Context) {
 		return
 	}
 
-	// 设置令牌过期
-	ctx.SetCookie("token", "", -1, "/", "localhost", false, true)
+	// 移除令牌
+	provider.Token.RemoveToken(ctx)
 	app.Response(ctx, result.Ok)
 }
