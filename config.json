@@ -14,7 +14,8 @@
       "Password": "",
       "Database": 0
     },
-    "JwtSecret": "MzkxODRGMjgtRjFEOC00NkNFLUEzRUItNzMzMUYwRDI5OUIw"
+    "JwtSecret": "MzkxODRGMjgtRjFEOC00NkNFLUEzRUItNzMzMUYwRDI5OUIw",
+    "SmsMagicCode": "123456"
   },
   "Release": {
     "Mysql": {
@@ -30,6 +31,7 @@
       "Password": "",
       "Database": 0
     },
-    "JwtSecret": "MzkxODRGMjgtRjFEOC00NkNFLUEzRUItNzMzMUYwRDI5OUIw"
+    "JwtSecret": "MzkxODRGMjgtRjFEOC00NkNFLUEzRUItNzMzMUYwRDI5OUIw",
+    "SmsMagicCode": ""
   }
 }

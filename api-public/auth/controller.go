@@ -8,6 +8,7 @@ package auth
 import (
 	"github.com/gin-gonic/gin"
 	"medium-server-go/framework/app"
+	"medium-server-go/framework/config"
 	"medium-server-go/framework/result"
 	"medium-server-go/service/enum"
 	"medium-server-go/service/provider"
@@ -15,8 +16,6 @@ import (
 	"medium-server-go/service/user"
 	"net/http"
 )
-
-const magicCode = "123456"
 
 // 手机号码登录
 func postLoginByPhone(ctx *gin.Context) {
@@ -30,7 +29,8 @@ func postLoginByPhone(ctx *gin.Context) {
 	}
 
 	// 如果非魔术验证码
-	if req.Code != magicCode {
+	smsMagicCode := config.Current.Config().SmsMagicCode
+	if smsMagicCode != "" && req.Code != smsMagicCode {
 		// 短信缓存对象
 		smsCache := sms.Cache{
 			Phone:    req.Phone,

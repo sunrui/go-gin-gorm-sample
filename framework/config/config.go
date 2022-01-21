@@ -31,9 +31,10 @@ type redis struct {
 
 // 配置对象
 type Config struct {
-	Mysql     mysql  // Mysql 配置对象
-	Redis     redis  // Redis 配置对象
-	JwtSecret []byte // Jwt 密钥
+	Mysql        mysql  // Mysql 配置对象
+	Redis        redis  // Redis 配置对象
+	JwtSecret    []byte // Jwt 密钥
+	SmsMagicCode string // 较验短信魔术码
 }
 
 // json 反射对象
