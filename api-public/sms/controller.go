@@ -38,18 +38,22 @@ func postCode(ctx *gin.Context) {
 
 	// 调用服务发送验证码
 	channel, reqId, err := provider.Sms.Send(req.Phone, req.CodeType, sixNumber)
+	var comment string
+	if err != nil {
+		comment = err.Error()
+	} else {
+		// 备注对象
+		type _comment struct {
+			Chanel string `json:"chanel"`
+			ReqId  string `json:"reqId"`
+		}
+		marshal, _ := json.Marshal(_comment{
+			Chanel: channel,
+			ReqId:  reqId,
+		})
 
-	// 备注对象
-	type comment struct {
-		Chanel string `json:"chanel"`
-		ReqId  string `json:"reqId"`
+		comment = string(marshal)
 	}
-
-	// 将备注对象转 json
-	marshal, _ := json.Marshal(comment{
-		Chanel: channel,
-		ReqId:  reqId,
-	})
 
 	// 存储发送记录
 	sms.SaveCode(&sms.Code{
@@ -59,7 +63,7 @@ func postCode(ctx *gin.Context) {
 		Ip:        ctx.ClientIP(),
 		UserAgent: ctx.Request.UserAgent(),
 		Success:   err == nil,
-		Comment:   string(marshal),
+		Comment:   comment,
 	})
 
 	// 发送验证码失败
