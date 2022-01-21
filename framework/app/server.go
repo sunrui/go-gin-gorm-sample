@@ -22,7 +22,7 @@ type Server struct {
 // 初始化
 func init() {
 	// 如果非调式环境注册 release 模式
-	if !config.Conf.IsDebugMode() {
+	if !config.Current.IsDebugMode() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 }

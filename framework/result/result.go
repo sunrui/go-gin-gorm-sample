@@ -30,6 +30,14 @@ func (result Result) WithData(data interface{}) Result {
 	return result
 }
 
+// 设置错误对象数据
+func (result Result) WithError(data interface{}) Result {
+	dataMap := make(map[string]interface{})
+	dataMap["error"] = data
+	result.Data = dataMap
+	return result
+}
+
 // 重写返回结果对象，使用 json 反序列化
 func (result Result) String() string {
 	marshal, _ := json.Marshal(result)

@@ -8,7 +8,7 @@ package main
 import (
 	"medium-server-go/api-public/auth"
 	"medium-server-go/api-public/sms"
-	"medium-server-go/api-public/user"
+	"medium-server-go/api-user/user"
 	"medium-server-go/framework/app"
 )
 

@@ -7,6 +7,7 @@
 package provider
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"medium-server-go/framework/config"
 )
@@ -26,10 +27,10 @@ type tokenJwtEntity struct {
 type tokenDef struct{}
 
 // jwt 密钥
-var jwtSecret = config.Conf.Config().JwtSecret
+var jwtSecret = config.Current.Config().JwtSecret
 
 // 生成 Jwt 字符串
-func (*tokenDef) Encode(tokenEntity TokenEntity) (token string, err error) {
+func encode(tokenEntity TokenEntity) (token string, err error) {
 	claims := tokenJwtEntity{
 		jwt.StandardClaims{},
 		tokenEntity,
@@ -40,7 +41,7 @@ func (*tokenDef) Encode(tokenEntity TokenEntity) (token string, err error) {
 }
 
 // 验证 Jwt 字符串
-func (*tokenDef) Decode(token string) (tokenEntity *TokenEntity, err error) {
+func decode(token string) (tokenEntity *TokenEntity, err error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &tokenJwtEntity{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})
@@ -52,6 +53,36 @@ func (*tokenDef) Decode(token string) (tokenEntity *TokenEntity, err error) {
 	}
 
 	return nil, err
+}
+
+// 写入 cookie 令牌
+func (*tokenDef) WriteToken(ctx *gin.Context, userId string, maxAge int) {
+	// 生成用户令牌
+	token, err := encode(TokenEntity{
+		UserId: userId,
+	})
+	if err != nil {
+		return
+	}
+
+	// 写入令牌，默认 30 天
+	ctx.SetCookie("token", token, maxAge,
+		"/", "localhost", false, true)
+}
+
+// 获取当前用户令牌
+func (*tokenDef) GetTokenEntity(ctx *gin.Context) (tokenEntity *TokenEntity, err error) {
+	var token string
+
+	token = ctx.GetHeader("token")
+	if token == "" {
+		token, err = ctx.Cookie("token")
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return decode(token)
 }
 
 var Token = &tokenDef{}

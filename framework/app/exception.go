@@ -20,7 +20,7 @@ import (
 func exceptionHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// 为了更好的调试，在开发环境中输出系统错误。
-		if !config.Conf.IsDebugMode() {
+		if !config.Current.IsDebugMode() {
 			// 捕获对象，全部抛出可以使用 panic 方法。
 			defer func() {
 				if err := recover(); err != nil {

@@ -64,17 +64,7 @@ func postLoginByPhone(ctx *gin.Context) {
 		user.SaveUser(userOne)
 	}
 
-	// 生成用户令牌
-	token, err := provider.Token.Encode(provider.TokenEntity{
-		UserId: userOne.Id,
-	})
-	if err != nil {
-		return
-	}
-
-	// 写入令牌，默认 30 天
-	ctx.SetCookie("token", token, 30*24*60*60,
-		"/", "localhost", false, true)
+	provider.Token.WriteToken(ctx, userOne.Id, 30*24*60*60)
 
 	ctx.JSON(http.StatusOK,
 		result.Ok.WithData(loginByPhoneRes{
@@ -96,16 +86,10 @@ func postLoginByWechat(ctx *gin.Context) {
 
 // 获取令牌
 func getToken(ctx *gin.Context) {
-	token, err := ctx.Cookie("token")
+	// 获取用户令牌
+	tokenEntity, err := provider.Token.GetTokenEntity(ctx)
 	if err != nil {
 		app.Response(ctx, result.NotFound)
-		return
-	}
-
-	// 获取用户令牌
-	tokenEntity, err := provider.Token.Decode(token)
-	if err != nil {
-		panic(err)
 		return
 	}
 

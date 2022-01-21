@@ -57,7 +57,8 @@ func (jsonConfig *jsonConfig) Config() *Config {
 	}
 }
 
-var Conf *jsonConfig
+// 当前配置
+var Current *jsonConfig
 
 // 加载当前配置
 func init() {
@@ -79,7 +80,7 @@ func init() {
 	}
 
 	// 反射配置文件
-	err = json.Unmarshal(stream, &Conf)
+	err = json.Unmarshal(stream, &Current)
 	if err != nil {
 		panic(err)
 	}
