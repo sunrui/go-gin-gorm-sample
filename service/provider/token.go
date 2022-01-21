@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"medium-server-go/framework/config"
+	"strings"
 )
 
 // 令牌对象
@@ -28,6 +29,8 @@ type tokenDef struct{}
 
 // jwt 密钥
 var jwtSecret = config.Current.Config().JwtSecret
+
+const tokenKey = "token"
 
 // 生成 Jwt 字符串
 func encode(tokenEntity TokenEntity) (token string, err error) {
@@ -66,7 +69,7 @@ func (*tokenDef) WriteToken(ctx *gin.Context, userId string, maxAge int) {
 	}
 
 	// 写入令牌，默认 30 天
-	ctx.SetCookie("token", token, maxAge,
+	ctx.SetCookie(tokenKey, token, maxAge,
 		"/", "localhost", false, true)
 }
 
@@ -74,9 +77,24 @@ func (*tokenDef) WriteToken(ctx *gin.Context, userId string, maxAge int) {
 func (*tokenDef) GetTokenEntity(ctx *gin.Context) (tokenEntity *TokenEntity, err error) {
 	var token string
 
-	token = ctx.GetHeader("token")
+	// 从 header 中获取令牌
+	getHeaderToken := func() string {
+		token = ctx.GetHeader("Authorization")
+		if token == "" {
+			return ""
+		}
+
+		prefix := "Bearer "
+		if strings.Index(token, prefix) != 0 {
+			return ""
+		}
+
+		return token[len(prefix):]
+	}
+
+	token = getHeaderToken()
 	if token == "" {
-		token, err = ctx.Cookie("token")
+		token, err = ctx.Cookie(tokenKey)
 		if err != nil {
 			return nil, err
 		}
