@@ -25,7 +25,7 @@ var Redis *redisPool
 
 // 初始化
 func init() {
-	redisConf := config.Current.Config().Redis
+	redisConf := config.Get().Redis
 
 	// 建立连接池
 	Redis = &redisPool{

@@ -44,22 +44,22 @@ type jsonConfig struct {
 	Release     Config
 }
 
+// 当前配置
+var current *jsonConfig
+
 // 是否在调试环境
-func (jsonConfig *jsonConfig) IsDebugMode() bool {
-	return jsonConfig.Environment == "Debug"
+func IsDebugMode() bool {
+	return current.Environment == "Debug"
 }
 
 // 获取当前配置
-func (jsonConfig *jsonConfig) Config() *Config {
-	if jsonConfig.IsDebugMode() {
-		return &jsonConfig.Debug
+func Get() *Config {
+	if IsDebugMode() {
+		return &current.Debug
 	} else {
-		return &jsonConfig.Release
+		return &current.Release
 	}
 }
-
-// 当前配置
-var Current *jsonConfig
 
 // 加载当前配置
 func init() {
@@ -81,7 +81,7 @@ func init() {
 	}
 
 	// 反射配置文件
-	err = json.Unmarshal(stream, &Current)
+	err = json.Unmarshal(stream, &current)
 	if err != nil {
 		panic(err)
 	}

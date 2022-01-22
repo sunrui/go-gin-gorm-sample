@@ -20,7 +20,7 @@ import (
 func exceptionHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// 为了更好的调试，在开发环境中输出系统错误。
-		if !config.Current.IsDebugMode() {
+		if !config.IsDebugMode() {
 			// 捕获对象，全部抛出可以使用 panic 方法。
 			defer func() {
 				if err := recover(); err != nil {
@@ -39,8 +39,8 @@ func exceptionHandler(handlerFunc gin.HandlerFunc) gin.HandlerFunc {
 
 					// 栈堆对象
 					type Stack struct {
-						Function string
-						File     string
+						Function string // 函数
+						File     string // 行数
 					}
 
 					var stacks []Stack
