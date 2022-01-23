@@ -14,8 +14,3 @@ type User struct {
 	Ip        string `json:"ip" gorm:"comment:ip 地址"`                          // ip 地址
 	UserAgent string `json:"userAgent" gorm:"comment:用户 ua"`                   // 用户 ua
 }
-
-// TableName 会将 User 的表名重写为 `profiles`
-func (User) TableName() string {
-	return "profiles"
-}

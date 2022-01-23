@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 	"medium-server-go/framework/config"
 	"strings"
 	"time"
@@ -31,7 +32,12 @@ func init() {
 		mysqlConf.Host,
 		mysqlConf.Port,
 		mysqlConf.Database)
-	Mysql, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	Mysql, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			TablePrefix:   "medium_", // 表名前缀
+			SingularTable: true,      // 使用单数表名
+		},
+	})
 	if err != nil {
 		panic(err.Error())
 	}
