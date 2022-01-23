@@ -54,10 +54,10 @@ func CreateUuid() string {
 
 // 数据库通用对象
 type Model struct {
-	Id        string     `sql:"type:uuid;primary_key;default:uuid_generate_v4()"` // 唯一 id
-	CreatedAt time.Time  `json:"created_at" gorm:"autoCreateTime:milli"`          // 创建时间
-	UpdatedAt time.Time  `json:"updated_at" gorm:"autoUpdateTime:milli"`          // 更新时间
-	DeletedAt *time.Time `sql:"index" json:"deleted_at"`                          // 删除时间
+	Id        string     `json:"id" gorm:"index;primary_key;comment:主键 id"`           // 主键 id
+	CreatedAt time.Time  `json:"created_at" gorm:"autoCreateTime:milli;comment:创建时间"` // 创建时间
+	UpdatedAt time.Time  `json:"updated_at" gorm:"autoUpdateTime:milli;comment:更新时间"` // 更新时间
+	DeletedAt *time.Time `json:"deleted_at" gorm:"comment:删除时间"`                      // 删除时间
 }
 
 // 创建对象前回调
