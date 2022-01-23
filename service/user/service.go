@@ -6,7 +6,11 @@
 
 package user
 
-import "medium-server-go/framework/db"
+import (
+	"errors"
+	"gorm.io/gorm"
+	"medium-server-go/framework/db"
+)
 
 // 初始化
 func init() {
@@ -27,7 +31,7 @@ func FindByPhone(phone string) *User {
 	var user User
 
 	query := db.Mysql.First(&user, "phone = ?", phone)
-	if query.RowsAffected == 0 {
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
 		return nil
 	}
 
@@ -39,7 +43,7 @@ func FindById(id string) *User {
 	var user User
 
 	query := db.Mysql.Find(&user, id)
-	if query.RowsAffected == 0 {
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
 		return nil
 	}
 

@@ -10,38 +10,39 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 // mysql 配置对象
 type mysql struct {
-	Host     string // 主机
-	Port     int    // 端口
-	Database string // 数据库
-	User     string // 用户名
-	Password string // 密码
+	Host     string `json:"host"`     // 主机
+	Port     int    `json:"port"`     // 端口
+	Database string `json:"database"` // 数据库
+	User     string `json:"user"`     // 用户名
+	Password string `json:"password"` // 密码
 }
 
 // redis 配置对象
 type redis struct {
-	Host     string // 主机
-	Port     int    // 端口
-	Password string // 密码
-	Database int    // 数据库s
+	Host     string `json:"host"`     // 主机
+	Port     int    `json:"port"`     // 端口
+	Password string `json:"password"` // 密码
+	Database int    `json:"database"` // 数据库s
 }
 
 // 配置对象
 type Config struct {
-	Mysql        mysql  // Mysql 配置对象
-	Redis        redis  // Redis 配置对象
-	JwtSecret    []byte // Jwt 密钥
-	SmsMagicCode string // 较验短信魔术码
+	Mysql        mysql  `json:"mysql"`        // Mysql 配置对象
+	Redis        redis  `json:"redis"`        // Redis 配置对象
+	JwtSecret    []byte `json:"jwtSecret"`    // Jwt 密钥
+	SmsMagicCode string `json:"smsMagicCode"` // 较验短信魔术码
 }
 
 // json 反射对象
 type jsonConfig struct {
-	Environment string
-	Debug       Config
-	Release     Config
+	Environment string `json:"environment"` // 当前环境
+	Debug       Config `json:"debug"`       // 开发环境
+	Release     Config `json:"release"`     //  正式环境
 }
 
 // 当前配置
@@ -49,7 +50,7 @@ var current *jsonConfig
 
 // 是否在调试环境
 func IsDebugMode() bool {
-	return current.Environment == "Debug"
+	return strings.ToLower(current.Environment) == "debug"
 }
 
 // 获取当前配置

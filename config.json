@@ -1,37 +1,37 @@
 {
-  "Environment": "Debug",
-  "Debug": {
-    "Mysql": {
-      "Host": "localhost",
-      "Port": 3306,
-      "Database": "medium",
-      "User": "root",
-      "Password": "root"
+  "environment": "debug",
+  "debug": {
+    "mysql": {
+      "host": "localhost",
+      "port": 3306,
+      "database": "medium",
+      "user": "root",
+      "password": "root"
     },
-    "Redis": {
-      "Host": "localhost",
-      "Port": 6379,
-      "Password": "",
-      "Database": 0
+    "redis": {
+      "host": "localhost",
+      "port": 6379,
+      "password": "",
+      "database": 0
     },
-    "JwtSecret": "MzkxODRGMjgtRjFEOC00NkNFLUEzRUItNzMzMUYwRDI5OUIw",
-    "SmsMagicCode": "123456"
+    "jwtsecret": "mzkxOdrGmjgtrjFeOC00NkNFLuezruItNzmzmuYwrdI5OuIw",
+    "smsmagicCode": "123456"
   },
-  "Release": {
-    "Mysql": {
-      "Host": "localhost",
-      "Port": 3306,
-      "Database": "medium",
-      "User": "root",
-      "Password": "root"
+  "release": {
+    "mysql": {
+      "host": "localhost",
+      "port": 3306,
+      "database": "medium",
+      "user": "root",
+      "password": "root"
     },
-    "Redis": {
-      "Host": "localhost",
-      "Port": 6379,
-      "Password": "",
-      "Database": 0
+    "redis": {
+      "host": "localhost",
+      "port": 6379,
+      "password": "",
+      "database": 0
     },
-    "JwtSecret": "MzkxODRGMjgtRjFEOC00NkNFLUEzRUItNzMzMUYwRDI5OUIw",
-    "SmsMagicCode": ""
+    "jwtsecret": "mzkxOdrGmjgtrjFeOC00NkNFLuezruItNzmzmuYwrdI5OuIw",
+    "smsmagicCode": ""
   }
 }
