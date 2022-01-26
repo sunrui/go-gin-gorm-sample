@@ -14,8 +14,12 @@
       "password": "",
       "database": 0
     },
-    "jwtsecret": "mzkxOdrGmjgtrjFeOC00NkNFLuezruItNzmzmuYwrdI5OuIw",
-    "smsmagicCode": "123456"
+    "jwt": {
+      "secret": "mzkxOdrGmjgtrjFeOC00NkNFLuezruItNzmzmuYwrdI5OuIw"
+    },
+    "sms": {
+      "magicCode": "123456"
+    }
   },
   "release": {
     "mysql": {
@@ -31,7 +35,11 @@
       "password": "",
       "database": 0
     },
-    "jwtsecret": "mzkxOdrGmjgtrjFeOC00NkNFLuezruItNzmzmuYwrdI5OuIw",
-    "smsmagicCode": ""
+    "jwt": {
+      "secret": "mzkxOdrGmjgtrjFeOC00NkNFLuezruItNzmzmuYwrdI5OuIw"
+    },
+    "sms": {
+      "magicCode": "123456"
+    }
   }
 }

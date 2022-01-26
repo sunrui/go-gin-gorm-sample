@@ -30,12 +30,22 @@ type redis struct {
 	Database int    `json:"database"` // 数据库s
 }
 
+// jwt 配置对象
+type jwt struct {
+	Secret []byte `json:"secret"` // 密钥
+}
+
+// sms 配置对象
+type sms struct {
+	MagicCode string `json:"magicCode"` // 短信魔术码
+}
+
 // 配置对象
 type Config struct {
-	Mysql        mysql  `json:"mysql"`        // Mysql 配置对象
-	Redis        redis  `json:"redis"`        // Redis 配置对象
-	JwtSecret    []byte `json:"jwtSecret"`    // Jwt 密钥
-	SmsMagicCode string `json:"smsMagicCode"` // 较验短信魔术码
+	Mysql mysql `json:"mysql"` // Mysql 配置对象
+	Redis redis `json:"redis"` // Redis 配置对象
+	Jwt   jwt   `json:"jwt"`   // jwt 配置对象
+	Sms   sms   `json:"sms"`   // sms 配置对象
 }
 
 // json 反射对象

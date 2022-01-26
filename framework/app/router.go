@@ -44,7 +44,7 @@ func (app *Server) RegisterRouter(router Router) {
 	groupRouter := app.engine.Group(router.GroupName)
 
 	if AuthMiddleware == nil || AdminMiddleware == nil {
-		panic("filter not implement")
+		panic("middleware not implement")
 		return
 	}
 

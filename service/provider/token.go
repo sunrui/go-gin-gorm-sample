@@ -28,7 +28,7 @@ type tokenJwtEntity struct {
 type tokenDef struct{}
 
 // jwt 密钥
-var jwtSecret = config.Get().JwtSecret
+var jwtSecret = config.Get().Jwt.Secret
 
 // 令牌 key 名称
 const tokenKey = "token"

@@ -28,7 +28,7 @@ func postLoginByPhone(ctx *gin.Context) {
 	}
 
 	// 如果非魔术验证码
-	smsMagicCode := config.Get().SmsMagicCode
+	smsMagicCode := config.Get().Sms.MagicCode
 	if smsMagicCode != "" && req.Code != smsMagicCode {
 		// 短信缓存对象
 		smsCache := sms.Cache{
