@@ -9,7 +9,6 @@ package sms
 import (
 	"fmt"
 	"medium-server-go/framework/db"
-	"medium-server-go/service/enum"
 )
 
 // 缓存数据
@@ -20,8 +19,8 @@ type CodeCache struct {
 
 // 缓存对象
 type Cache struct {
-	Phone    string        `json:"phone"`    // 手机号
-	CodeType enum.CodeType `json:"codeType"` // 验证码类型
+	Phone    string   `json:"phone"`    // 手机号
+	CodeType CodeType `json:"codeType"` // 验证码类型
 }
 
 // 获取主键

@@ -12,7 +12,6 @@ import (
 	"medium-server-go/framework/result"
 	"medium-server-go/service/biz/sms"
 	"medium-server-go/service/biz/user"
-	"medium-server-go/service/enum"
 	"medium-server-go/service/provider"
 	"net/http"
 )
@@ -34,7 +33,7 @@ func postLoginByPhone(ctx *gin.Context) {
 		// 短信缓存对象
 		smsCache := sms.Cache{
 			Phone:    req.Phone,
-			CodeType: enum.Code.Login,
+			CodeType: sms.CodeLogin,
 		}
 
 		// 获取缓存数据

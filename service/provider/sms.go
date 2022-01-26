@@ -8,14 +8,14 @@ package provider
 
 import (
 	"fmt"
-	"medium-server-go/service/enum"
+	"medium-server-go/service/biz/sms"
 )
 
 // 短信定义
 type smsDef struct{}
 
 // 短信发送
-func (*smsDef) Send(phone string, codeType enum.CodeType, sixNumber string) (channel string, reqId string, err error) {
+func (*smsDef) Send(phone string, codeType sms.CodeType, sixNumber string) (channel string, reqId string, err error) {
 	echo := fmt.Sprintf("Send - %s, %s, %s", phone, codeType, sixNumber)
 	fmt.Println(echo)
 

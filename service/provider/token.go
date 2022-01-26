@@ -33,7 +33,7 @@ var jwtSecret = config.Get().JwtSecret
 // 令牌 key 名称
 const tokenKey = "token"
 
-// 生成 Jwt 字符串
+// 生成 jwt 字符串
 func encode(tokenEntity TokenEntity) (token string, err error) {
 	claims := tokenJwtEntity{
 		jwt.StandardClaims{},
@@ -44,7 +44,7 @@ func encode(tokenEntity TokenEntity) (token string, err error) {
 	return tokenClaims.SignedString(jwtSecret)
 }
 
-// 验证 Jwt 字符串
+// 验证 jwt 字符串
 func decode(token string) (tokenEntity *TokenEntity, err error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &tokenJwtEntity{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
