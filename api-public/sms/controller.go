@@ -11,8 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"medium-server-go/framework/app"
 	"medium-server-go/framework/result"
+	"medium-server-go/service/biz/sms"
 	"medium-server-go/service/provider"
-	"medium-server-go/service/sms"
 )
 
 // 发送验证码

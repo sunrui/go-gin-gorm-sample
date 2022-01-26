@@ -20,12 +20,21 @@ type RouterPath struct {
 	HandlerFunc gin.HandlerFunc
 }
 
+// 权限类型
+type RoleType int
+
+const (
+	RolePublic = iota // 开放权限
+	RoleAuth          // 登录权限
+	RoleAdmin         // 管理权限
+)
+
 // 路由对象
 type Router struct {
 	// 组名
 	GroupName string
-	// 是否需要授权
-	NeedAuth bool
+	// 权限类型
+	RoleType RoleType
 	// 路由路径
 	RouterPaths []RouterPath
 }
@@ -34,9 +43,18 @@ type Router struct {
 func (app *Server) RegisterRouter(router Router) {
 	groupRouter := app.engine.Group(router.GroupName)
 
-	// 如果需要授权，注册授权中间件
-	if router.NeedAuth {
-		groupRouter.Use(authMiddleware)
+	if AuthMiddleware == nil || AdminMiddleware == nil {
+		panic("filter not implement")
+		return
+	}
+
+	// 权限类型
+	switch router.RoleType {
+	case RolePublic:
+	case RoleAuth:
+		groupRouter.Use(AuthMiddleware) // 授权中间件
+	case RoleAdmin:
+		groupRouter.Use(AdminMiddleware) // 管理中间件
 	}
 
 	// 注册路由回调

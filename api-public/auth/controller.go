@@ -10,10 +10,10 @@ import (
 	"medium-server-go/framework/app"
 	"medium-server-go/framework/config"
 	"medium-server-go/framework/result"
+	"medium-server-go/service/biz/sms"
+	"medium-server-go/service/biz/user"
 	"medium-server-go/service/enum"
 	"medium-server-go/service/provider"
-	"medium-server-go/service/sms"
-	"medium-server-go/service/user"
 	"net/http"
 )
 

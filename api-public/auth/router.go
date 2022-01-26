@@ -11,7 +11,7 @@ import "medium-server-go/framework/app"
 func GetRouter() app.Router {
 	return app.Router{
 		GroupName: "/auth",
-		NeedAuth:  false,
+		RoleType:  app.RolePublic,
 		RouterPaths: []app.RouterPath{
 			{
 				HttpMethod:   "POST",

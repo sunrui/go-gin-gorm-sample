@@ -6,9 +6,9 @@
 package main
 
 import (
-	"medium-server-go/api-public/auth"
-	"medium-server-go/api-public/sms"
-	"medium-server-go/api-user/user"
+	api_admin "medium-server-go/api-admin"
+	api_public "medium-server-go/api-public"
+	api_user "medium-server-go/api-user"
 	"medium-server-go/framework/app"
 )
 
@@ -17,13 +17,9 @@ func main() {
 	server := app.New()
 
 	// 注册路由
-	for _, router := range []app.Router{
-		sms.GetRouter(),
-		auth.GetRouter(),
-		user.GetRouter(),
-	} {
-		server.RegisterRouter(router)
-	}
+	api_public.Register(server)
+	api_user.Register(server)
+	api_admin.Register(server)
 
 	// 启动服务
 	server.Run(8080)

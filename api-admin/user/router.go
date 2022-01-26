@@ -12,7 +12,7 @@ import "medium-server-go/framework/app"
 func GetRouter() app.Router {
 	return app.Router{
 		GroupName: "/user",
-		RoleType:  app.RoleAuth,
+		RoleType:  app.RoleAdmin,
 		RouterPaths: []app.RouterPath{
 			{
 				HttpMethod:   "POST",
