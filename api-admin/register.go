@@ -7,14 +7,14 @@
 package api_admin
 
 import (
-	"medium-server-go/api-admin/user"
+	"medium-server-go/api-admin/api-user"
 	"medium-server-go/framework/app"
 )
 
 // 注册路由
 func Register(server *app.Server) {
 	for _, router := range []app.Router{
-		user.GetRouter(),
+		api_user.GetRouter(),
 	} {
 		router.GroupName = "/admin" + router.GroupName
 		server.RegisterRouter(router)

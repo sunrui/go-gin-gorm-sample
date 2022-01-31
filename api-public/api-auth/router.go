@@ -3,17 +3,17 @@
  * Author: sunrui
  * Date: 2022/01/02
  */
-package auth
+package api_auth
 
 import (
 	"medium-server-go/framework/app"
 	"net/http"
 )
 
-// 获取授权路由对象
+// 获取路由对象
 func GetRouter() app.Router {
 	return app.Router{
-		GroupName: "/auth",
+		GroupName: "/api-auth",
 		RoleType:  app.RolePublic,
 		RouterPaths: []app.RouterPath{
 			{

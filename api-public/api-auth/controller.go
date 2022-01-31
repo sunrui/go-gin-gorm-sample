@@ -3,7 +3,7 @@
  * Author: sunrui
  * Date: 2022/01/01
  */
-package auth
+package api_auth
 
 import (
 	"github.com/gin-gonic/gin"
@@ -18,7 +18,7 @@ import (
 
 // 手机号码登录
 func postLoginByPhone(ctx *gin.Context) {
-	var req loginByPhoneReq
+	var req postLoginByPhoneReq
 
 	// 较验参数
 	errData, err := app.ValidateParameter(ctx, &req)
@@ -68,14 +68,14 @@ func postLoginByPhone(ctx *gin.Context) {
 	provider.Token.WriteToken(ctx, userOne.Id, 30*24*60*60)
 
 	ctx.JSON(http.StatusOK,
-		result.Ok.WithData(loginByPhoneRes{
+		result.Ok.WithData(postLoginByPhoneRes{
 			UserId: userOne.Id,
 		}))
 }
 
 // 微信登录
 func postLoginByWechat(ctx *gin.Context) {
-	var req loginByPhoneReq
+	var req postLoginByPhoneReq
 
 	// 较验参数
 	errData, err := app.ValidateParameter(ctx, &req)

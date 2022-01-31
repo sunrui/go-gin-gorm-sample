@@ -7,14 +7,16 @@
 package api_user
 
 import (
-	"medium-server-go/api-user/user"
+	"medium-server-go/api-user/api-open"
+	"medium-server-go/api-user/api-user"
 	"medium-server-go/framework/app"
 )
 
 // 注册路由
 func Register(server *app.Server) {
 	for _, router := range []app.Router{
-		user.GetRouter(),
+		api_open.GetRouter(),
+		api_user.GetRouter(),
 	} {
 		server.RegisterRouter(router)
 	}

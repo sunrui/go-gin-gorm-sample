@@ -1,26 +1,31 @@
 /*
  * Copyright (c) 2022 honeysense All rights reserved.
  * Author: sunrui
- * Date: 2022/01/21 00:47:21
+ * Date: 2022/01/31 21:00:31
  */
 
-package user
+package api_open
 
 import (
 	"medium-server-go/framework/app"
 	"net/http"
 )
 
-// 获取短信路由对象
+// 获取路由对象
 func GetRouter() app.Router {
 	return app.Router{
-		GroupName: "/user",
+		GroupName: "/api-open",
 		RoleType:  app.RoleAuth,
 		RouterPaths: []app.RouterPath{
 			{
+				HttpMethod:   http.MethodGet,
+				RelativePath: "",
+				HandlerFunc:  getOpen,
+			},
+			{
 				HttpMethod:   http.MethodPost,
-				RelativePath: "/:id",
-				HandlerFunc:  getUser,
+				RelativePath: "",
+				HandlerFunc:  postOpen,
 			},
 		},
 	}

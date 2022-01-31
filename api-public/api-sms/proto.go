@@ -4,7 +4,7 @@
  * Date: 2022/01/03 17:51:03
  */
 
-package sms
+package api_sms
 
 import (
 	"medium-server-go/service/biz/sms"

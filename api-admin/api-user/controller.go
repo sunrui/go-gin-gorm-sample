@@ -4,7 +4,7 @@
  * Date: 2022/01/20 23:20:20
  */
 
-package user
+package api_user
 
 import (
 	"fmt"
@@ -16,5 +16,5 @@ func getUser(ctx *gin.Context) {
 	id := ctx.Param("id")
 	fmt.Println(id)
 
-	//app.Response(ctx, result.Result.WithData(user))
+	//app.Response(ctx, result.Result.WithData(api-api-user))
 }

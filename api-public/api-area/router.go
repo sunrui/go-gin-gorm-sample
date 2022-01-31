@@ -4,22 +4,22 @@
  * Date: 2022/01/31 14:44:31
  */
 
-package area
+package api_area
 
 import (
 	"medium-server-go/framework/app"
 	"net/http"
 )
 
-// 获取授权路由对象
+// 获取路由对象
 func GetRouter() app.Router {
 	return app.Router{
-		GroupName: "/area",
+		GroupName: "/api-area",
 		RoleType:  app.RolePublic,
 		RouterPaths: []app.RouterPath{
 			{
 				HttpMethod:   http.MethodGet,
-				RelativePath: "/",
+				RelativePath: "",
 				HandlerFunc:  getCountry,
 			},
 			{

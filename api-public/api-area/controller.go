@@ -4,7 +4,7 @@
  * Date: 2022/01/29 18:02:29
  */
 
-package area
+package api_area
 
 import (
 	"github.com/gin-gonic/gin"
@@ -30,7 +30,7 @@ func getProvince(ctx *gin.Context) {
 func getCity(ctx *gin.Context) {
 	provinceId, err := strconv.Atoi(ctx.Param("provinceId"))
 	if err != nil {
-		app.Response(ctx, result.NotFound.WithKeyPair("provinceId", provinceId))
+		app.Response(ctx, result.ParameterError.WithKeyPair("provinceId", ctx.Param("provinceId")))
 		return
 	}
 
@@ -47,7 +47,7 @@ func getCity(ctx *gin.Context) {
 func getArea(ctx *gin.Context) {
 	cityId, err := strconv.Atoi(ctx.Param("cityId"))
 	if err != nil {
-		app.Response(ctx, result.NotFound.WithKeyPair("cityId", cityId))
+		app.Response(ctx, result.ParameterError.WithKeyPair("cityId", ctx.Param("cityId")))
 		return
 	}
 

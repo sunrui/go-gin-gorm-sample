@@ -4,17 +4,17 @@
  * Date: 2022/01/03 17:59:03
  */
 
-package sms
+package api_sms
 
 import (
 	"medium-server-go/framework/app"
 	"net/http"
 )
 
-// 获取短信路由对象
+// 获取路由对象
 func GetRouter() app.Router {
 	return app.Router{
-		GroupName: "/sms",
+		GroupName: "/api-sms",
 		RoleType:  app.RolePublic,
 		RouterPaths: []app.RouterPath{
 			{

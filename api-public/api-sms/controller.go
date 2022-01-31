@@ -4,7 +4,7 @@
  * Date: 2022/01/03 18:07:03
  */
 
-package sms
+package api_sms
 
 import (
 	"encoding/json"
