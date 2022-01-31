@@ -34,8 +34,8 @@ func getCity(ctx *gin.Context) {
 		return
 	}
 
-	cities, err := area.GetCity(provinceId)
-	if err != nil {
+	cities := area.GetCity(provinceId)
+	if cities == nil {
 		app.Response(ctx, result.NotFound.WithKeyPair("provinceId", provinceId))
 		return
 	}
@@ -51,8 +51,8 @@ func getArea(ctx *gin.Context) {
 		return
 	}
 
-	areas, err := area.GetArea(cityId)
-	if err != nil {
+	areas := area.GetArea(cityId)
+	if areas == nil {
 		app.Response(ctx, result.NotFound.WithKeyPair("cityId", cityId))
 		return
 	}

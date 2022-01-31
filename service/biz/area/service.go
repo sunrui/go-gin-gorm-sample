@@ -8,7 +8,6 @@ package area
 
 import (
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 	"os"
 )
@@ -34,7 +33,7 @@ func GetProvinces() []Province {
 }
 
 // 获取市
-func GetCity(provinceId int) ([]City, error) {
+func GetCity(provinceId int) []City {
 	// 根据省 id 获取省节点
 	var province *Province
 	for _, one := range country.Provinces {
@@ -45,7 +44,7 @@ func GetCity(provinceId int) ([]City, error) {
 	}
 
 	if province == nil {
-		return nil, errors.New("provinceId not found")
+		return nil
 	}
 
 	var cities []City
@@ -54,11 +53,11 @@ func GetCity(provinceId int) ([]City, error) {
 		cities = append(cities, city)
 	}
 
-	return cities, nil
+	return cities
 }
 
 // 获取地区
-func GetArea(cityId int) ([]Area, error) {
+func GetArea(cityId int) []Area {
 	// 根据市 id 获取市节点
 	var city *City
 	for _, province := range country.Provinces {
@@ -71,10 +70,10 @@ func GetArea(cityId int) ([]Area, error) {
 	}
 
 	if city == nil {
-		return nil, errors.New("cityId not found")
+		return nil
 	}
 
-	return city.Areas, nil
+	return city.Areas
 }
 
 // 加载当前配置

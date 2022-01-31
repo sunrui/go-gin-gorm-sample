@@ -25,9 +25,10 @@ type RouterPath struct {
 type RoleType int
 
 const (
-	RolePublic = iota // 开放权限
-	RoleAuth          // 登录权限
-	RoleAdmin         // 管理权限
+	RolePublic  = iota // 开放权限
+	RoleAuth           // 登录权限
+	RoleAdmin          // 管理权限
+	RoleChannel        // 渠道权限
 )
 
 // 路由对象
