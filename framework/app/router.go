@@ -8,6 +8,7 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 // 路由路径
@@ -60,13 +61,13 @@ func (app *Server) RegisterRouter(router Router) {
 	// 注册路由回调
 	for _, routerPath := range router.RouterPaths {
 		switch routerPath.HttpMethod {
-		case "GET":
+		case http.MethodGet:
 			groupRouter.GET(routerPath.RelativePath, exceptionHandler(routerPath.HandlerFunc))
-		case "POST":
+		case http.MethodPost:
 			groupRouter.POST(routerPath.RelativePath, exceptionHandler(routerPath.HandlerFunc))
-		case "PUT":
+		case http.MethodPut:
 			groupRouter.PUT(routerPath.RelativePath, exceptionHandler(routerPath.HandlerFunc))
-		case "DELETE":
+		case http.MethodDelete:
 			groupRouter.DELETE(routerPath.RelativePath, exceptionHandler(routerPath.HandlerFunc))
 		default:
 			panic("http method not supported")

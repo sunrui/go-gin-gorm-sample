@@ -7,6 +7,7 @@
 package api_public
 
 import (
+	"medium-server-go/api-public/area"
 	"medium-server-go/api-public/auth"
 	"medium-server-go/api-public/sms"
 	"medium-server-go/framework/app"
@@ -15,6 +16,7 @@ import (
 // 注册路由
 func Register(server *app.Server) {
 	for _, router := range []app.Router{
+		area.GetRouter(),
 		sms.GetRouter(),
 		auth.GetRouter(),
 	} {

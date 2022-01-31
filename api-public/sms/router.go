@@ -6,7 +6,10 @@
 
 package sms
 
-import "medium-server-go/framework/app"
+import (
+	"medium-server-go/framework/app"
+	"net/http"
+)
 
 // 获取短信路由对象
 func GetRouter() app.Router {
@@ -15,11 +18,11 @@ func GetRouter() app.Router {
 		RoleType:  app.RolePublic,
 		RouterPaths: []app.RouterPath{
 			{
-				HttpMethod:   "POST",
+				HttpMethod:   http.MethodPost,
 				RelativePath: "/code",
 				HandlerFunc:  postCode,
 			}, {
-				HttpMethod:   "POST",
+				HttpMethod:   http.MethodPost,
 				RelativePath: "/verify",
 				HandlerFunc:  postVerify,
 			},

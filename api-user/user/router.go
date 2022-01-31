@@ -6,7 +6,10 @@
 
 package user
 
-import "medium-server-go/framework/app"
+import (
+	"medium-server-go/framework/app"
+	"net/http"
+)
 
 // 获取短信路由对象
 func GetRouter() app.Router {
@@ -15,7 +18,7 @@ func GetRouter() app.Router {
 		RoleType:  app.RoleAuth,
 		RouterPaths: []app.RouterPath{
 			{
-				HttpMethod:   "POST",
+				HttpMethod:   http.MethodPost,
 				RelativePath: "/:id",
 				HandlerFunc:  getUser,
 			},

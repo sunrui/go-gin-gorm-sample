@@ -17,8 +17,8 @@ type Result struct {
 }
 
 // 设置结果对象参数对
-func (result Result) WithKeyPair(key string, value string) Result {
-	dataMap := make(map[string]string)
+func (result Result) WithKeyPair(key string, value interface{}) Result {
+	dataMap := make(map[string]interface{})
 	dataMap[key] = value
 	result.Data = dataMap
 	return result
