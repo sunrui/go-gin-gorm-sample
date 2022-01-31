@@ -14,7 +14,7 @@ import (
 // 获取路由对象
 func GetRouter() app.Router {
 	return app.Router{
-		GroupName: "/api-api-user",
+		GroupName: "/user",
 		RoleType:  app.RoleAuth,
 		RouterPaths: []app.RouterPath{
 			{

@@ -14,7 +14,7 @@ import (
 // 获取路由对象
 func GetRouter() app.Router {
 	return app.Router{
-		GroupName: "/api-sms",
+		GroupName: "/sms",
 		RoleType:  app.RolePublic,
 		RouterPaths: []app.RouterPath{
 			{
