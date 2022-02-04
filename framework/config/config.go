@@ -88,12 +88,12 @@ func init() {
 
 	stream, err := readStream()
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 
 	// 反射配置文件
 	err = json.Unmarshal(stream, &current)
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 }
